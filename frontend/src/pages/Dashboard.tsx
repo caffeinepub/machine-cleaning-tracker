@@ -1,16 +1,66 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useGetAllMachines } from '../hooks/useQueries';
 import { MachineCard } from '../components/MachineCard';
 import { AddMachineModal } from '../components/AddMachineModal';
 import { OverdueAlertBanner } from '../components/OverdueAlertBanner';
+import { DueTodayAlertBanner } from '../components/DueTodayAlertBanner';
 import { StatsBar } from '../components/StatsBar';
+import { SessionLogsPanel } from '../components/SessionLogsPanel';
+import { PhoneLoginForm } from '../components/PhoneLoginForm';
+import { ForgotPasswordDialog } from '../components/ForgotPasswordDialog';
+import { getMachineStatus } from '../utils/dateUtils';
+import { useInternetIdentity } from '../hooks/useInternetIdentity';
+import { useActor } from '../hooks/useActor';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Plus, RefreshCw, Wrench } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { Plus, RefreshCw, Wrench, LogIn, LogOut, Lock } from 'lucide-react';
 
 export function Dashboard() {
     const [addOpen, setAddOpen] = useState(false);
+    const [forgotOpen, setForgotOpen] = useState(false);
     const { data: machines = [], isLoading, isError, refetch, isFetching } = useGetAllMachines();
+    const { identity, login, clear, isLoggingIn, loginStatus } = useInternetIdentity();
+    const { actor } = useActor();
+
+    const dueTodayMachines = machines.filter(
+        (m) => getMachineStatus(m.nextDue) === 'due-today'
+    );
+
+    // Track previous identity to detect login/logout transitions
+    const prevIdentityRef = useRef<typeof identity>(undefined);
+
+    useEffect(() => {
+        const prev = prevIdentityRef.current;
+        const curr = identity;
+
+        if (!actor) return;
+
+        // Login event: identity just became available
+        if (!prev && curr) {
+            const principalBytes = Array.from(
+                curr.getPrincipal().toUint8Array()
+            ) as number[];
+            actor.logEvent(new Uint8Array(principalBytes), 'login').catch(() => {});
+        }
+
+        // Logout event: identity just became unavailable
+        if (prev && !curr) {
+            const principalBytes = Array.from(
+                prev.getPrincipal().toUint8Array()
+            ) as number[];
+            actor.logEvent(new Uint8Array(principalBytes), 'logout').catch(() => {});
+        }
+
+        prevIdentityRef.current = curr;
+    }, [identity, actor]);
+
+    const isAuthenticated = !!identity;
+
+    const handleLogout = () => {
+        clear();
+    };
 
     return (
         <div className="min-h-screen flex flex-col bg-background">
@@ -44,10 +94,34 @@ export function Dashboard() {
                         >
                             <RefreshCw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
                         </Button>
+
+                        {isAuthenticated ? (
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="gap-1.5 font-semibold"
+                                onClick={handleLogout}
+                            >
+                                <LogOut className="w-4 h-4" />
+                                Logout
+                            </Button>
+                        ) : (
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="gap-1.5 font-semibold"
+                                onClick={login}
+                                disabled={isLoggingIn}
+                            >
+                                <LogIn className="w-4 h-4" />
+                                {isLoggingIn ? 'Signing in…' : 'Login'}
+                            </Button>
+                        )}
+
                         <Button
-                            onClick={() => setAddOpen(true)}
                             size="sm"
-                            className="gap-2 font-semibold"
+                            className="gap-1.5 font-semibold"
+                            onClick={() => setAddOpen(true)}
                         >
                             <Plus className="w-4 h-4" />
                             Add Machine
@@ -56,83 +130,60 @@ export function Dashboard() {
                 </div>
             </header>
 
-            {/* Main content */}
-            <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 py-6 space-y-6">
-                {/* Overdue alert banner */}
-                {!isLoading && machines.length > 0 && (
-                    <OverdueAlertBanner machines={machines} />
-                )}
+            <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 py-6 space-y-5">
+                {/* Due Today Alert Banner — shown above overdue banner */}
+                {!isLoading && <DueTodayAlertBanner machines={dueTodayMachines} />}
 
-                {/* Stats bar */}
+                {/* Overdue Alert Banner */}
+                {!isLoading && <OverdueAlertBanner machines={machines} />}
+
+                {/* Stats Bar */}
                 {!isLoading && machines.length > 0 && (
                     <StatsBar machines={machines} />
                 )}
 
-                {/* Section heading */}
-                <div className="flex items-center justify-between">
-                    <h2 className="font-condensed text-2xl font-bold text-foreground tracking-wide">
-                        All Machines
-                        {machines.length > 0 && (
-                            <span className="ml-2 text-base font-sans font-normal text-muted-foreground">
-                                ({machines.length})
-                            </span>
-                        )}
-                    </h2>
-                </div>
-
-                {/* Loading state */}
+                {/* Loading State */}
                 {isLoading && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {[1, 2, 3].map((i) => (
-                            <div key={i} className="rounded-lg border border-border p-5 space-y-3">
+                        {[...Array(3)].map((_, i) => (
+                            <div key={i} className="rounded-lg border border-border p-4 space-y-3">
                                 <Skeleton className="h-5 w-2/3" />
                                 <Skeleton className="h-4 w-1/2" />
-                                <Skeleton className="h-4 w-1/3" />
-                                <Skeleton className="h-8 w-full mt-2" />
+                                <Skeleton className="h-4 w-full" />
+                                <Skeleton className="h-8 w-full" />
                             </div>
                         ))}
                     </div>
                 )}
 
-                {/* Error state */}
+                {/* Error State */}
                 {isError && (
-                    <div className="flex flex-col items-center justify-center py-16 text-center">
-                        <div className="w-14 h-14 rounded-full bg-destructive/10 flex items-center justify-center mb-4">
-                            <Wrench className="w-7 h-7 text-destructive" />
-                        </div>
-                        <h3 className="font-condensed text-xl font-bold text-foreground mb-1">
-                            Failed to Load Machines
-                        </h3>
-                        <p className="text-sm text-muted-foreground mb-4">
-                            Could not connect to the backend. Please try again.
-                        </p>
-                        <Button variant="outline" onClick={() => refetch()} className="gap-2">
-                            <RefreshCw className="w-4 h-4" />
-                            Retry
+                    <div className="text-center py-12">
+                        <p className="text-status-danger font-semibold mb-2">Failed to load machines.</p>
+                        <Button variant="outline" size="sm" onClick={() => refetch()}>
+                            Try Again
                         </Button>
                     </div>
                 )}
 
-                {/* Empty state */}
+                {/* Empty State */}
                 {!isLoading && !isError && machines.length === 0 && (
-                    <div className="flex flex-col items-center justify-center py-20 text-center">
-                        <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-5">
-                            <Wrench className="w-8 h-8 text-primary" />
+                    <div className="text-center py-16 space-y-3">
+                        <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto">
+                            <Wrench className="w-8 h-8 text-muted-foreground" />
                         </div>
-                        <h3 className="font-condensed text-2xl font-bold text-foreground mb-2">
-                            No Machines Yet
-                        </h3>
-                        <p className="text-sm text-muted-foreground mb-6 max-w-xs">
-                            Add your first machine to start tracking machine part replacements and due dates.
+                        <h2 className="font-condensed text-xl font-bold text-foreground">No machines yet</h2>
+                        <p className="text-muted-foreground text-sm max-w-xs mx-auto">
+                            Add your first machine to start tracking part replacements and due dates.
                         </p>
-                        <Button onClick={() => setAddOpen(true)} className="gap-2 font-semibold">
+                        <Button className="gap-1.5 font-semibold mt-2" onClick={() => setAddOpen(true)}>
                             <Plus className="w-4 h-4" />
                             Add First Machine
                         </Button>
                     </div>
                 )}
 
-                {/* Machine grid */}
+                {/* Machine Grid */}
                 {!isLoading && !isError && machines.length > 0 && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {machines.map((machine) => (
@@ -140,16 +191,62 @@ export function Dashboard() {
                         ))}
                     </div>
                 )}
+
+                {/* Login / Session Section */}
+                <section className="grid grid-cols-1 md:grid-cols-2 gap-5 items-start">
+                    {/* Phone Login Card */}
+                    {!isAuthenticated && (
+                        <Card className="border-border shadow-sm">
+                            <CardHeader className="pb-3">
+                                <CardTitle className="flex items-center gap-2 text-base font-semibold">
+                                    <Lock className="w-4 h-4 text-primary" />
+                                    Sign In
+                                </CardTitle>
+                                <CardDescription className="text-xs">
+                                    Log in with your phone number to access session logs and admin features.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="pt-0 space-y-4">
+                                <PhoneLoginForm onForgotPassword={() => setForgotOpen(true)} />
+
+                                <div className="flex items-center gap-2">
+                                    <Separator className="flex-1" />
+                                    <span className="text-xs text-muted-foreground">or</span>
+                                    <Separator className="flex-1" />
+                                </div>
+
+                                <Button
+                                    variant="outline"
+                                    className="w-full gap-1.5 font-semibold"
+                                    onClick={login}
+                                    disabled={isLoggingIn}
+                                >
+                                    <LogIn className="w-4 h-4" />
+                                    {isLoggingIn ? 'Signing in…' : 'Continue with Identity'}
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    )}
+
+                    {/* Session Logs Panel — only shown when authenticated */}
+                    {isAuthenticated && (
+                        <div className="md:col-span-2">
+                            <SessionLogsPanel />
+                        </div>
+                    )}
+                </section>
             </main>
 
             {/* Footer */}
             <footer className="border-t border-border bg-card mt-auto">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
-                    <span>© {new Date().getFullYear()} Machine Part Tracker. All rights reserved.</span>
-                    <span className="flex items-center gap-1">
-                        Built with <span className="text-primary">♥</span> using{' '}
+                    <span>© {new Date().getFullYear()} PartTrack — Machine Part Manager</span>
+                    <span>
+                        Built with{' '}
+                        <span className="text-primary">♥</span>{' '}
+                        using{' '}
                         <a
-                            href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(typeof window !== 'undefined' ? window.location.hostname : 'unknown-app')}`}
+                            href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(typeof window !== 'undefined' ? window.location.hostname : 'parttrack')}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="underline hover:text-foreground transition-colors"
@@ -161,6 +258,7 @@ export function Dashboard() {
             </footer>
 
             <AddMachineModal open={addOpen} onOpenChange={setAddOpen} />
+            <ForgotPasswordDialog open={forgotOpen} onOpenChange={setForgotOpen} />
         </div>
     );
 }

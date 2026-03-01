@@ -1,20 +1,57 @@
-import Text "mo:core/Text";
 import Map "mo:core/Map";
+import Text "mo:core/Text";
 import Time "mo:core/Time";
 import Order "mo:core/Order";
 import Iter "mo:core/Iter";
 import Int "mo:core/Int";
 import Array "mo:core/Array";
 import Runtime "mo:core/Runtime";
-
+import List "mo:core/List";
+import Blob "mo:core/Blob";
+import Principal "mo:core/Principal";
 import MixinStorage "blob-storage/Mixin";
+import MixinAuthorization "authorization/MixinAuthorization";
+import AccessControl "authorization/access-control";
 import Migration "migration";
 
 (with migration = Migration.run)
 actor {
   include MixinStorage();
 
-  // Renamed to machine part variant.
+  let accessControlState = AccessControl.initState();
+  include MixinAuthorization(accessControlState);
+
+  // ========== User Profile ==========
+
+  type UserProfile = {
+    name : Text;
+  };
+
+  let userProfiles = Map.empty<Principal, UserProfile>();
+
+  public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can get profiles");
+    };
+    userProfiles.get(caller);
+  };
+
+  public query ({ caller }) func getUserProfile(user : Principal) : async ?UserProfile {
+    if (caller != user and not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Can only view your own profile");
+    };
+    userProfiles.get(user);
+  };
+
+  public shared ({ caller }) func saveCallerUserProfile(profile : UserProfile) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can save profiles");
+    };
+    userProfiles.add(caller, profile);
+  };
+
+  // ========== Machines ==========
+
   type MachinePart = {
     #coolantFiltrationUnit;
     #mistUnit;
@@ -46,7 +83,6 @@ actor {
 
   let machines = Map.empty<Text, Machine>();
 
-  // Add machine with new fields
   public shared ({ caller }) func addMachine(
     id : Text,
     name : Text,
@@ -55,6 +91,9 @@ actor {
     machineNo : ?Text,
     machinePart : MachinePart,
   ) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can add machines");
+    };
     if (machines.containsKey(id)) {
       Runtime.trap("Machine with this ID already exists");
     };
@@ -77,6 +116,9 @@ actor {
     machineNo : ?Text,
     machinePart : ?MachinePart,
   ) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can update machines");
+    };
     switch (machines.get(id)) {
       case (null) { Runtime.trap("Machine not found") };
       case (?machine) {
@@ -97,6 +139,9 @@ actor {
   };
 
   public shared ({ caller }) func deleteMachine(id : Text) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can delete machines");
+    };
     if (not machines.containsKey(id)) { Runtime.trap("Machine not found") };
     machines.remove(id);
   };
@@ -119,5 +164,56 @@ actor {
         machine.name.contains(#text name);
       }
     );
+  };
+
+  // ========== Audit Log ==========
+
+  type LogEntry = {
+    timestamp : Time.Time;
+    userId : Blob;
+    eventType : Text;
+  };
+
+  let auditLogs = List.empty<LogEntry>();
+
+  public shared ({ caller }) func logEvent(userId : [Nat8], eventType : Text) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can log events");
+    };
+    let logEntry : LogEntry = {
+      timestamp = Time.now();
+      userId = Blob.fromArray(userId);
+      eventType;
+    };
+    auditLogs.add(logEntry);
+  };
+
+  public query ({ caller }) func getAuditLogs() : async [LogEntry] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can view audit logs");
+    };
+    auditLogs.toArray();
+  };
+
+  // ========== Contacts ==========
+
+  type Contact = {
+    fullName : Text;
+    phone : Text;
+    email : Text;
+  };
+
+  let contacts = List.empty<Contact>();
+
+  public shared ({ caller }) func saveContact(fullName : Text, phone : Text, email : Text) : async () {
+    // any caller including guests may submit contact details
+    contacts.add({ fullName; phone; email });
+  };
+
+  public query ({ caller }) func getAllContacts() : async [Contact] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can view all contacts");
+    };
+    contacts.toArray();
   };
 };

@@ -1,57 +1,107 @@
 {
   "kind": "build_request",
-  "title": "Rename 'Cleaning' to 'Machine Part' throughout the app",
-  "projectName": "CleanTrack",
+  "title": "Add Contact Details tab after login with user name display",
+  "projectName": "Machine Part Tracker",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Rename all user-facing occurrences of 'cleaning' (and its variants: 'Cleaning', 'CLEANING', 'cleaning tool', 'Cleaning Tool', 'cleaning done', 'Cleaning Done', 'last cleaned', 'Last Cleaned', 'next due', 'Machine Cleaning Tracker', etc.) to use 'Machine Part' terminology throughout the frontend UI. For example: 'Cleaning Tool' → 'Machine Part', 'Cleaning Done' → 'Machine Part Done', 'Last Cleaned' → 'Last Replaced', 'Next Due' → 'Next Due', page title 'Machine Cleaning Tracker' → 'Machine Part Tracker', button labels, card labels, modal titles, form field labels, banner text, and stats bar labels must all reflect the new naming.",
+      "text": "After a successful login, automatically navigate the user to a new 'Add Contact Details' screen/tab instead of landing directly on the Dashboard.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-recent"
+          "msg-7"
         ],
         "quotes": [
-          "change name cleaning to Machine part"
+          "after logging open new tab like add contact deatail"
         ]
       },
       "acceptanceCriteria": [
-        "No user-visible text contains the word 'cleaning' or 'Cleaning' anywhere in the UI",
-        "All form fields, modal headers, card labels, and button text use 'Machine Part' or equivalent renamed terminology",
-        "The page/app title reflects 'Machine Part' instead of 'Cleaning'",
-        "The 'Cleaning Tool' field label is renamed to 'Machine Part' in AddMachineModal, EditMachineModal, MachineFormFields, and MachineCard",
-        "The 'Cleaning Done' button on MachineCard is renamed to 'Part Done' or 'Machine Part Done'",
-        "The overdue alert banner and stats bar use updated terminology"
+        "After a successful phone number login, the app transitions to an 'Add Contact Details' screen.",
+        "The Dashboard is not shown until the user completes or skips the contact details step.",
+        "The contact details screen is visually distinct (e.g., a full-page card or tab-style layout)."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Update the backend Motoko actor in backend/main.mo to rename the cleaningTool field and any related type variants or labels from 'cleaning' terminology to 'machinePart' or equivalent, ensuring consistency with the frontend rename.",
-      "target": "backend",
+      "text": "On the 'Add Contact Details' screen, display the logged-in user's name prominently at the top of the page.",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-recent"
+          "msg-5"
         ],
         "quotes": [
-          "change name cleaning to Machine part"
+          "after logging Name Showinh on top"
         ]
       },
       "acceptanceCriteria": [
-        "The Machine type field previously named cleaningTool is renamed to machinePart (or equivalent) in the Motoko actor",
-        "All CRUD operations referencing the old field name are updated accordingly",
-        "The backend compiles without errors after the rename"
+        "The user's name is displayed at the top of the Add Contact Details screen after login.",
+        "The name text is clearly readable and styled consistently with the app's design."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Create an 'Add Contact Details' form screen with fields for the user to enter their contact information (full name, phone number, email address). Include a 'Save' button to submit and a 'Skip' button to proceed to the Dashboard without saving.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-7"
+        ],
+        "quotes": [
+          "after logging open new tab like add contact deatail"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The form includes fields for full name, phone number, and email address.",
+        "A 'Save' button submits the contact details and then navigates to the Dashboard.",
+        "A 'Skip' button allows the user to bypass this step and go directly to the Dashboard.",
+        "Basic validation is applied: phone number format and email format are checked before saving."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Store submitted contact details (full name, phone number, email) in the backend so they can be retrieved later.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-7"
+        ],
+        "quotes": [
+          "after logging open new tab like add contact deatail"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The backend actor has a method to save contact details associated with a user principal.",
+        "The backend actor has a method to retrieve contact details for a given principal.",
+        "Contact details persist across canister upgrades."
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "After saving or skipping the contact details step, navigate the user to the main Dashboard.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-7"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Clicking 'Save' on the contact details form navigates to the Dashboard after successful submission.",
+        "Clicking 'Skip' immediately navigates to the Dashboard.",
+        "The contact details screen does not reappear on subsequent logins if details have already been saved."
       ]
     }
   ],
   "constraints": [
-    "Do not alter any files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui",
-    "Do not change any functional logic — only rename labels and field names"
+    "Do not modify files under frontend/src/hooks/ (useInternetIdentity.ts, useActor.ts) or frontend/src/main.tsx.",
+    "Do not modify files under frontend/src/components/ui/.",
+    "All Motoko logic must remain in backend/main.mo as a single actor."
   ],
   "nonGoals": [
-    "Adding new features or changing any business logic",
-    "Redesigning the UI layout or visual theme",
-    "Changing date/status logic"
+    "Social login or third-party identity providers.",
+    "Email or SMS verification of contact details.",
+    "Contact details editing after the initial save (not requested).",
+    "Changes to the existing machine CRUD or audit log features."
   ],
   "imageRequirements": {
     "required": [],

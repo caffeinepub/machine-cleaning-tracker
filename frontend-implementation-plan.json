@@ -1,79 +1,84 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Rename 'Cleaning' to 'Machine Part' throughout the app",
+  "title": "Add Contact Details tab after login with user name display",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Rename all user-facing occurrences of 'cleaning' terminology to 'Machine Part' terminology throughout the frontend UI",
+      "summary": "After successful login, navigate user to 'Add Contact Details' screen instead of Dashboard",
       "acceptanceCriteria": [
-        "No user-visible text contains the word 'cleaning' or 'Cleaning' anywhere in the UI",
-        "All form fields, modal headers, card labels, and button text use 'Machine Part' or equivalent renamed terminology",
-        "The page/app title reflects 'Machine Part' instead of 'Cleaning'",
-        "The 'Cleaning Tool' field label is renamed to 'Machine Part' in AddMachineModal, EditMachineModal, MachineFormFields, and MachineCard",
-        "The 'Cleaning Done' button on MachineCard is renamed to 'Part Done' or 'Machine Part Done'",
-        "The overdue alert banner and stats bar use updated terminology"
+        "After a successful phone number login, the app transitions to an 'Add Contact Details' screen.",
+        "The Dashboard is not shown until the user completes or skips the contact details step.",
+        "The contact details screen is visually distinct (e.g., a full-page card or tab-style layout)."
       ],
       "file_operations": [
         {
-          "path": "frontend/index.html",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Update the page title from 'Machine Cleaning Tracker' to 'Machine Part Tracker' in the <title> tag"
+          "description": "Add routing logic to conditionally render AddContactDetailsPage or Dashboard based on whether the user has saved contact details. Check contact details status after authentication using a query hook, then render AddContactDetailsPage if no contact details exist, otherwise render Dashboard."
         },
         {
-          "path": "frontend/src/components/AddMachineModal.tsx",
-          "operation": "modify",
-          "description": "Rename all 'cleaning' references: change dialog title from 'Add Machine' context to reference 'Machine Part', update field labels from 'Cleaning Tool' to 'Machine Part', update 'Last Cleaned' to 'Last Replaced', and ensure button text reflects the new terminology"
-        },
+          "path": "frontend/src/pages/AddContactDetailsPage.tsx",
+          "operation": "create",
+          "description": "Create a new full-page component for the Add Contact Details screen. This page will be shown immediately after login if the user has not yet saved contact details. Include a card-style layout with the user's name at the top, a form for contact details, and Save/Skip buttons."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Display logged-in user's name prominently at top of Add Contact Details screen",
+      "acceptanceCriteria": [
+        "The user's name is displayed at the top of the Add Contact Details screen after login.",
+        "The name text is clearly readable and styled consistently with the app's design."
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/components/EditMachineModal.tsx",
+          "path": "frontend/src/pages/AddContactDetailsPage.tsx",
           "operation": "modify",
-          "description": "Rename all 'cleaning' references: update dialog title and description text, change 'Cleaning Tool' field label to 'Machine Part', update 'Last Cleaned' to 'Last Replaced', and ensure all form labels use the new terminology"
-        },
+          "description": "Fetch the user's profile using the useGetCallerUserProfile query hook. Display the user's name at the top of the page in a prominent heading. If no profile exists yet (null), display a fallback greeting such as 'Welcome'. Style the name text using Tailwind classes consistent with the app's design tokens."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Create Add Contact Details form with fields for full name, phone, email, and Save/Skip buttons",
+      "acceptanceCriteria": [
+        "The form includes fields for full name, phone number, and email address.",
+        "A 'Save' button submits the contact details and then navigates to the Dashboard.",
+        "A 'Skip' button allows the user to bypass this step and go directly to the Dashboard.",
+        "Basic validation is applied: phone number format and email format are checked before saving."
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/components/MachineFormFields.tsx",
+          "path": "frontend/src/pages/AddContactDetailsPage.tsx",
           "operation": "modify",
-          "description": "Rename form field labels: change 'Cleaning Tool' to 'Machine Part', update 'Last Cleaned' to 'Last Replaced', update 'Next Due' label if it references cleaning context, and ensure placeholder text reflects the new terminology"
-        },
-        {
-          "path": "frontend/src/components/MachineCard.tsx",
-          "operation": "modify",
-          "description": "Rename all 'cleaning' references in the card UI: change 'Cleaning Tool' display label to 'Machine Part', rename 'Cleaning Done' button to 'Part Done' or 'Machine Part Done', update 'Last Cleaned' to 'Last Replaced', and ensure all tooltips and card text reflect the new terminology"
-        },
-        {
-          "path": "frontend/src/components/OverdueAlertBanner.tsx",
-          "operation": "modify",
-          "description": "Update alert banner text to replace any 'cleaning' references with 'Machine Part' terminology, ensuring overdue messaging uses 'part replacement' or equivalent phrasing instead of cleaning-related terms"
-        },
-        {
-          "path": "frontend/src/components/StatsBar.tsx",
-          "operation": "modify",
-          "description": "Update stats bar tile labels and descriptive text to replace any 'cleaning' status references with 'Machine Part' terminology, ensuring metric labels reflect part maintenance rather than cleaning operations"
-        },
-        {
-          "path": "frontend/src/components/StatusBadge.tsx",
-          "operation": "modify",
-          "description": "Update status badge labels and tooltip text to replace any 'cleaning' references with 'Machine Part' or part replacement terminology if applicable"
-        },
-        {
-          "path": "frontend/src/components/RescheduleDateModal.tsx",
-          "operation": "modify",
-          "description": "Update modal title and description text to replace any 'cleaning' or 'next due' context references with 'Machine Part' terminology, ensuring the date picker label reflects part replacement scheduling"
-        },
-        {
-          "path": "frontend/src/pages/Dashboard.tsx",
-          "operation": "modify",
-          "description": "Update the dashboard page header title from 'Machine Cleaning Tracker' to 'Machine Part Tracker' and ensure any other text on the page uses the new terminology"
+          "description": "Implement a form with controlled inputs for full name, phone number, and email address. Add validation logic to check phone number format (e.g., digits only, minimum length) and email format (e.g., valid email regex). Include a 'Save' button that triggers form submission via the useSaveContact mutation hook, then navigates to Dashboard on success. Include a 'Skip' button that immediately sets a flag (e.g., localStorage or state) and navigates to Dashboard without saving."
         },
         {
           "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Rename the 'markCleaningDone' mutation hook to 'markPartDone' or 'markMachinePartDone' and update any related function names or comments that reference cleaning terminology to use Machine Part terminology instead"
+          "description": "Add a useSaveContact mutation hook that calls actor.saveContact(fullName, phone, email). After successful mutation, invalidate the 'contacts' query key to refresh any contact-related data. Also add a useGetAllContacts query hook that calls actor.getAllContacts() if needed for future features."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Navigate to Dashboard after saving or skipping contact details",
+      "acceptanceCriteria": [
+        "Clicking 'Save' on the contact details form navigates to the Dashboard after successful submission.",
+        "Clicking 'Skip' immediately navigates to the Dashboard.",
+        "The contact details screen does not reappear on subsequent logins if details have already been saved."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/AddContactDetailsPage.tsx",
+          "operation": "modify",
+          "description": "Implement navigation logic using React state or a simple flag. On 'Save' button click, submit the form via useSaveContact mutation, then set a completion flag and trigger a re-render or navigation to Dashboard. On 'Skip' button click, set the same completion flag immediately and navigate to Dashboard. The completion flag can be a local state variable that triggers App.tsx to render Dashboard instead of AddContactDetailsPage."
         },
         {
-          "path": "frontend/src/utils/dateUtils.ts",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Update any function names, comments, or exported utility names that reference 'cleaning' to use 'Machine Part' or part replacement terminology, ensuring utility function signatures reflect the new domain language"
+          "description": "Add logic to check if the user has saved contact details by querying the backend (e.g., useGetAllContacts and checking if any contact exists for the current user, or adding a dedicated query). If contact details exist, render Dashboard. If not, render AddContactDetailsPage. Ensure this check only runs after authentication is confirmed. This prevents the contact details screen from reappearing on subsequent logins."
         }
       ]
     }

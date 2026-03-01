@@ -10,6 +10,16 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export interface Contact {
+  'fullName' : string,
+  'email' : string,
+  'phone' : string,
+}
+export interface LogEntry {
+  'userId' : Uint8Array,
+  'timestamp' : Time,
+  'eventType' : string,
+}
 export interface Machine {
   'id' : string,
   'lastCleaningDone' : Time,
@@ -22,6 +32,10 @@ export type MachinePart = { 'chillerUnit' : null } |
   { 'mistUnit' : null } |
   { 'coolantFiltrationUnit' : null };
 export type Time = bigint;
+export interface UserProfile { 'name' : string }
+export type UserRole = { 'admin' : null } |
+  { 'user' : null } |
+  { 'guest' : null };
 export interface _CaffeineStorageCreateCertificateResult {
   'method' : string,
   'blob_hash' : string,
@@ -49,14 +63,25 @@ export interface _SERVICE {
     _CaffeineStorageRefillResult
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
+  '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'addMachine' : ActorMethod<
     [string, string, Time, Time, [] | [string], MachinePart],
     undefined
   >,
+  'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'deleteMachine' : ActorMethod<[string], undefined>,
+  'getAllContacts' : ActorMethod<[], Array<Contact>>,
   'getAllMachines' : ActorMethod<[], Array<Machine>>,
+  'getAuditLogs' : ActorMethod<[], Array<LogEntry>>,
+  'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
+  'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getMachine' : ActorMethod<[string], Machine>,
   'getMachinesByName' : ActorMethod<[string], Array<Machine>>,
+  'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'isCallerAdmin' : ActorMethod<[], boolean>,
+  'logEvent' : ActorMethod<[Uint8Array, string], undefined>,
+  'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'saveContact' : ActorMethod<[string, string, string], undefined>,
   'updateMachine' : ActorMethod<
     [
       string,

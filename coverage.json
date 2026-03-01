@@ -1,78 +1,93 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-03-01T00:15:38.835Z",
+  "generatedAt": "2026-03-01T01:12:57.945Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
-    "implemented": 1,
+    "total": 5,
+    "implemented": 4,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Rename all user-facing occurrences of 'cleaning' (and its variants: 'Cleaning', 'CLEANING', 'cleaning tool', 'Cleaning Tool', 'cleaning done', 'Cleaning Done', 'last cleaned', 'Last Cleaned', 'next due', 'Machine Cleaning Tracker', etc.) to use 'Machine Part' terminology throughout the frontend UI. For example: 'Cleaning Tool' → 'Machine Part', 'Cleaning Done' → 'Machine Part Done', 'Last Cleaned' → 'Last Replaced', 'Next Due' → 'Next Due', page title 'Machine Cleaning Tracker' → 'Machine Part Tracker', button labels, card labels, modal titles, form field labels, banner text, and stats bar labels must all reflect the new naming.",
+        "summary": "After a successful login, automatically navigate the user to a new 'Add Contact Details' screen/tab instead of landing directly on the Dashboard.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/index.html",
-          "frontend/src/components/AddMachineModal.tsx",
-          "frontend/src/components/EditMachineModal.tsx",
-          "frontend/src/components/MachineFormFields.tsx",
-          "frontend/src/components/MachineCard.tsx",
-          "frontend/src/components/OverdueAlertBanner.tsx",
-          "frontend/src/components/StatsBar.tsx",
-          "frontend/src/components/StatusBadge.tsx",
-          "frontend/src/components/RescheduleDateModal.tsx",
-          "frontend/src/pages/Dashboard.tsx",
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/utils/dateUtils.ts"
+          "frontend/src/App.tsx",
+          "frontend/src/pages/AddContactDetailsPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/index.html",
-          "frontend/src/components/AddMachineModal.tsx",
-          "frontend/src/components/EditMachineModal.tsx",
-          "frontend/src/components/MachineFormFields.tsx",
-          "frontend/src/components/MachineCard.tsx",
-          "frontend/src/components/OverdueAlertBanner.tsx",
-          "frontend/src/components/StatsBar.tsx",
-          "frontend/src/components/RescheduleDateModal.tsx",
-          "frontend/src/pages/Dashboard.tsx",
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/utils/dateUtils.ts"
+          "frontend/src/App.tsx",
+          "frontend/src/pages/AddContactDetailsPage.tsx"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Update the backend Motoko actor in backend/main.mo to rename the cleaningTool field and any related type variants or labels from 'cleaning' terminology to 'machinePart' or equivalent, ensuring consistency with the frontend rename.",
+        "summary": "On the 'Add Contact Details' screen, display the logged-in user's name prominently at the top of the page.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/AddContactDetailsPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/AddContactDetailsPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Create an 'Add Contact Details' form screen with fields for the user to enter their contact information (full name, phone number, email address). Include a 'Save' button to submit and a 'Skip' button to proceed to the Dashboard without saving.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/AddContactDetailsPage.tsx",
+          "frontend/src/hooks/useQueries.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/AddContactDetailsPage.tsx",
+          "frontend/src/hooks/useQueries.ts"
+        ]
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Store submitted contact details (full name, phone number, email) in the backend so they can be retrieved later.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
+      },
+      {
+        "id": "REQ-5",
+        "summary": "After saving or skipping the contact details step, navigate the user to the main Dashboard.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/AddContactDetailsPage.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/AddContactDetailsPage.tsx",
+          "frontend/src/App.tsx"
+        ]
       }
     ]
   },
   "changedFiles": [
+    "backend/authorization/MixinAuthorization.mo",
+    "backend/authorization/access-control.mo",
     "backend/main.mo",
     "backend/migration.mo",
     "build-request.json",
+    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/index.html",
+    "frontend/src/App.tsx",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/AddMachineModal.tsx",
-    "frontend/src/components/EditMachineModal.tsx",
-    "frontend/src/components/MachineCard.tsx",
-    "frontend/src/components/MachineFormFields.tsx",
-    "frontend/src/components/OverdueAlertBanner.tsx",
-    "frontend/src/components/RescheduleDateModal.tsx",
-    "frontend/src/components/StatsBar.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useActor.ts",
     "frontend/src/hooks/useQueries.ts",
-    "frontend/src/pages/Dashboard.tsx",
-    "frontend/src/utils/dateUtils.ts",
+    "frontend/src/pages/AddContactDetailsPage.tsx",
+    "frontend/src/utils/urlParams.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

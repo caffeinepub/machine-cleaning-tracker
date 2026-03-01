@@ -56,6 +56,7 @@ export default {
                 'status-ok': 'oklch(var(--status-ok))',
                 'status-warn': 'oklch(var(--status-warn))',
                 'status-danger': 'oklch(var(--status-danger))',
+                'due-today': 'oklch(var(--due-today) / <alpha-value>)',
                 chart: {
                     1: 'oklch(var(--chart-1))',
                     2: 'oklch(var(--chart-2))',

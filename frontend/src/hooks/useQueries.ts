@@ -1,10 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import type { Machine } from '../backend';
+import type { Machine, LogEntry, UserProfile } from '../backend';
 import { MachinePart } from '../backend';
 import { dateToTime, calculateNextDueFromToday } from '../utils/dateUtils';
 
 const MACHINES_KEY = ['machines'];
+const AUDIT_LOGS_KEY = ['auditLogs'];
+const CURRENT_USER_PROFILE_KEY = ['currentUserProfile'];
+const CONTACTS_KEY = ['contacts'];
 
 export function useGetAllMachines() {
     const { actor, isFetching } = useActor();
@@ -17,6 +20,56 @@ export function useGetAllMachines() {
         },
         enabled: !!actor && !isFetching,
         refetchInterval: 30_000,
+    });
+}
+
+export function useGetAuditLogs() {
+    const { actor, isFetching } = useActor();
+
+    return useQuery<LogEntry[]>({
+        queryKey: AUDIT_LOGS_KEY,
+        queryFn: async () => {
+            if (!actor) return [];
+            return actor.getAuditLogs();
+        },
+        enabled: !!actor && !isFetching,
+        staleTime: 10_000,
+        refetchInterval: 15_000,
+    });
+}
+
+export function useGetCallerUserProfile() {
+    const { actor, isFetching: actorFetching } = useActor();
+
+    const query = useQuery<UserProfile | null>({
+        queryKey: CURRENT_USER_PROFILE_KEY,
+        queryFn: async () => {
+            if (!actor) throw new Error('Actor not available');
+            return actor.getCallerUserProfile();
+        },
+        enabled: !!actor && !actorFetching,
+        retry: false,
+    });
+
+    return {
+        ...query,
+        isLoading: actorFetching || query.isLoading,
+        isFetched: !!actor && query.isFetched,
+    };
+}
+
+export function useSaveContact() {
+    const { actor } = useActor();
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (params: { fullName: string; phone: string; email: string }) => {
+            if (!actor) throw new Error('Actor not ready');
+            await actor.saveContact(params.fullName, params.phone, params.email);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: CONTACTS_KEY });
+        },
     });
 }
 

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { Machine } from '../backend';
 import { MachinePart } from '../backend';
-import { formatDate } from '../utils/dateUtils';
+import { formatDate, getMachineStatus } from '../utils/dateUtils';
 import { StatusBadge } from './StatusBadge';
 import { EditMachineModal } from './EditMachineModal';
 import { DeleteConfirmDialog } from './DeleteConfirmDialog';
@@ -20,6 +20,7 @@ import {
     CheckCircle2,
     Loader2,
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface MachineCardProps {
     machine: Machine;
@@ -38,6 +39,8 @@ export function MachineCard({ machine }: MachineCardProps) {
     const [partDone, setPartDone] = useState(false);
 
     const markPartDone = useMarkPartDone();
+    const status = getMachineStatus(machine.nextDue);
+    const isDueToday = status === 'due-today';
 
     const handlePartDone = async () => {
         try {
@@ -50,15 +53,37 @@ export function MachineCard({ machine }: MachineCardProps) {
 
     return (
         <>
-            <Card className="group relative overflow-hidden border border-border shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5">
-                {/* Orange accent bar on left */}
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l" />
+            <Card
+                className={cn(
+                    'group relative overflow-hidden border shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5',
+                    isDueToday
+                        ? 'border-due-today bg-due-today/5 animate-pulse-card-red'
+                        : 'border-border'
+                )}
+            >
+                {/* Accent bar on left — dark red for due-today, orange otherwise */}
+                <div
+                    className={cn(
+                        'absolute left-0 top-0 bottom-0 w-1 rounded-l',
+                        isDueToday ? 'bg-due-today' : 'bg-primary'
+                    )}
+                />
 
                 <CardHeader className="pb-2 pl-5">
                     <div className="flex items-start justify-between gap-2">
                         <div className="flex items-center gap-2 min-w-0">
-                            <div className="flex-shrink-0 w-9 h-9 rounded-md bg-primary/10 flex items-center justify-center">
-                                <Wrench className="w-4 h-4 text-primary" />
+                            <div
+                                className={cn(
+                                    'flex-shrink-0 w-9 h-9 rounded-md flex items-center justify-center',
+                                    isDueToday ? 'bg-due-today/15' : 'bg-primary/10'
+                                )}
+                            >
+                                <Wrench
+                                    className={cn(
+                                        'w-4 h-4',
+                                        isDueToday ? 'text-due-today' : 'text-primary'
+                                    )}
+                                />
                             </div>
                             <div className="min-w-0">
                                 <h3 className="font-condensed text-lg font-bold text-foreground truncate leading-tight">
@@ -90,12 +115,27 @@ export function MachineCard({ machine }: MachineCardProps) {
                             </div>
                         </div>
                         <div className="flex items-start gap-2">
-                            <CalendarClock className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                            <CalendarClock
+                                className={cn(
+                                    'w-4 h-4 mt-0.5 flex-shrink-0',
+                                    isDueToday ? 'text-due-today' : 'text-muted-foreground'
+                                )}
+                            />
                             <div>
-                                <p className="text-xs text-muted-foreground uppercase tracking-wide font-semibold mb-0.5">
+                                <p
+                                    className={cn(
+                                        'text-xs uppercase tracking-wide font-semibold mb-0.5',
+                                        isDueToday ? 'text-due-today' : 'text-muted-foreground'
+                                    )}
+                                >
                                     Next Due
                                 </p>
-                                <p className="text-sm font-semibold text-foreground">
+                                <p
+                                    className={cn(
+                                        'text-sm font-semibold',
+                                        isDueToday ? 'text-due-today font-bold' : 'text-foreground'
+                                    )}
+                                >
                                     {formatDate(machine.nextDue)}
                                 </p>
                             </div>

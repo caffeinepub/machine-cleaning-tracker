@@ -1,4 +1,4 @@
-export type MachineStatus = 'ok' | 'due-soon' | 'overdue';
+export type MachineStatus = 'ok' | 'due-soon' | 'due-today' | 'overdue';
 
 /** Convert IC Time (bigint nanoseconds) to JS Date */
 export function timeToDate(time: bigint): Date {
@@ -18,10 +18,22 @@ export function daysUntilDue(nextDue: bigint): number {
     return Math.ceil(diffMs / (1000 * 60 * 60 * 24));
 }
 
-/** Determine machine status based on due date */
+/** Get milliseconds until due date */
+export function msUntilDue(nextDue: bigint): number {
+    const now = new Date();
+    const dueDate = timeToDate(nextDue);
+    return dueDate.getTime() - now.getTime();
+}
+
+/**
+ * Determine machine status based on due date.
+ * Priority: overdue > due-today (≤24h) > due-soon (≤7 days) > ok
+ */
 export function getMachineStatus(nextDue: bigint): MachineStatus {
-    const days = daysUntilDue(nextDue);
-    if (days <= 0) return 'overdue';
+    const ms = msUntilDue(nextDue);
+    if (ms <= 0) return 'overdue';
+    if (ms <= 86_400_000) return 'due-today';   // within 24 hours
+    const days = Math.ceil(ms / (1000 * 60 * 60 * 24));
     if (days <= 3) return 'due-soon';
     return 'ok';
 }
@@ -32,6 +44,18 @@ export function formatDate(time: bigint): string {
         year: 'numeric',
         month: 'short',
         day: 'numeric',
+    });
+}
+
+/** Format a bigint IC time to a readable date+time string */
+export function formatDateTime(time: bigint): string {
+    return timeToDate(time).toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
     });
 }
 
@@ -55,6 +79,7 @@ export function getStatusLabel(status: MachineStatus, days: number): string {
         const abs = Math.abs(days);
         return abs === 0 ? 'Due Today' : `Overdue ${abs}d`;
     }
+    if (status === 'due-today') return 'Due in <1 Day!';
     if (status === 'due-soon') return `Due in ${days}d`;
     return `${days}d left`;
 }
@@ -71,4 +96,17 @@ export function calculateNextDueFromToday(
         Number((nextDue - lastCleaningDone) / BigInt(1_000_000));
     const today = new Date();
     return new Date(today.getTime() + intervalMs);
+}
+
+/**
+ * Format a Uint8Array userId (principal bytes) as a short truncated string for display.
+ * Shows first 5 and last 3 hex chars with ellipsis in between.
+ */
+export function formatPrincipalShort(userId: Uint8Array): string {
+    if (!userId || userId.length === 0) return 'unknown';
+    const hex = Array.from(userId)
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join('');
+    if (hex.length <= 10) return hex;
+    return `${hex.slice(0, 6)}…${hex.slice(-4)}`;
 }

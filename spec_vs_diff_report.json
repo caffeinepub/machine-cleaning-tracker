@@ -1,35 +1,62 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-03-01T00:15:38.832Z",
-  "summary": "The diff implements both REQ-1 and REQ-2 comprehensively. All user-facing 'cleaning' terminology has been renamed to 'Machine Part' equivalents across frontend components, and the backend Motoko actor has been updated to use 'machinePart' instead of 'cleaningTool'. A migration module was also added to handle the field rename for existing data.",
-  "missing_requirements": [],
-  "hallucinated_features": [
+  "generatedAt": "2026-03-01T01:12:57.941Z",
+  "summary": "The diff implements most of the requested requirements: a new AddContactDetailsPage with form fields, save/skip navigation, backend contact storage, and post-login routing. However, REQ-2 (displaying the logged-in user's name prominently at the top) is only partially implemented — the component supports a userName prop but App.tsx never passes it. The backend lacks a visible retrieve method for contact details as required by REQ-4. The migration module returns an empty contacts list rather than persisting existing data. There is also a constraint violation: useActor.ts was modified despite the constraint prohibiting it.",
+  "missing_requirements": [
     {
-      "description": "A backend migration module (backend/migration.mo) was added to handle data migration from the old 'cleaningTool' field to the new 'machinePart' field, including OldMachine/NewMachine type definitions and a run() migration function.",
-      "reason": "The build request only asked to rename the field in backend/main.mo and update CRUD operations. No migration module or data migration logic was requested.",
+      "id": "REQ-2",
+      "requirement": "Display the logged-in user's name prominently at the top of the Add Contact Details screen after login.",
+      "reason": "AddContactDetailsPage accepts a userName prop and fetches userProfile internally, but App.tsx never passes the userName prop when rendering AddContactDetailsPage, so the name will only display if getCallerUserProfile returns data from a prior saveCallerUserProfile call that may not have occurred at this point in the flow.",
       "evidence": [
-        "backend/migration.mo",
-        "backend/main.mo"
+        "frontend/src/App.tsx",
+        "frontend/src/pages/AddContactDetailsPage.tsx"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "requirement": "The backend actor has a method to retrieve contact details for a given principal.",
+      "reason": "The backend/main.mo diff shows a saveContact method is called from the frontend mutation, but no getContact or equivalent retrieval query method for contact details is visible in the truncated diff.",
+      "evidence": [
+        "backend/main.mo",
+        "frontend/src/hooks/useQueries.ts"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "requirement": "Contact details persist across canister upgrades.",
+      "reason": "The migration module defines a run function but returns an empty contacts list rather than migrating existing contact data, meaning contacts would be lost on upgrade rather than persisted.",
+      "evidence": [
+        "backend/migration.mo"
       ]
     }
   ],
-  "confidence": 0.88,
+  "hallucinated_features": [
+    {
+      "description": "useActor.ts was modified to add getSecretParameter and caffeineAdminToken initialization logic.",
+      "reason": "The build constraints explicitly state 'Do not modify files under frontend/src/hooks/ (useInternetIdentity.ts, useActor.ts)'. The diff shows useActor.ts was modified.",
+      "evidence": [
+        "frontend/src/hooks/useActor.ts"
+      ]
+    },
+    {
+      "description": "A URL parameter utility module with session storage and hash-based routing helpers was added.",
+      "reason": "No requirement requested URL parameter utilities, session parameter storage, or hash-based routing helpers. This is unrelated to the contact details feature.",
+      "evidence": [
+        "frontend/src/utils/urlParams.ts"
+      ]
+    }
+  ],
+  "confidence": 0.72,
   "changed_files": [
     "backend/main.mo",
     "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/index.html",
-    "frontend/src/components/AddMachineModal.tsx",
-    "frontend/src/components/EditMachineModal.tsx",
-    "frontend/src/components/MachineCard.tsx",
-    "frontend/src/components/MachineFormFields.tsx",
-    "frontend/src/components/OverdueAlertBanner.tsx",
-    "frontend/src/components/RescheduleDateModal.tsx",
-    "frontend/src/components/StatsBar.tsx",
+    "frontend/src/App.tsx",
+    "frontend/src/hooks/useActor.ts",
     "frontend/src/hooks/useQueries.ts",
-    "frontend/src/pages/Dashboard.tsx",
-    "frontend/src/utils/dateUtils.ts",
+    "frontend/src/pages/AddContactDetailsPage.tsx",
+    "frontend/src/utils/urlParams.ts",
     "project_state.json"
   ]
 }

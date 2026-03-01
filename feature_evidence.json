@@ -2,20 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-rename-all-user-facing-occurrences-of-cleaning-and-its-variants-cleaning-cleaning-cleaning-tool-cleaning-tool-cleaning-done-cleaning-done-last-cleaned-last-cleaned-next-due-machine-cleaning-tracker-etc-to-use-machine-part-terminology-throughout-the-frontend-ui-for-example-cleaning-tool-machine-part-cleaning-done-machine-part-done-last-cleaned-last-replaced-next-due-next-due-page-title-machine-cleaning-tracker-machine-part-tracker-button-labels-card-labels-modal-titles-form-field-labels-banner-text-and-stats-bar-labels-must-all-reflect-the-new-naming",
-      "featureTitle": "Rename all user-facing occurrences of 'cleaning' (and its variants: 'Cleaning', 'CLEANING', 'cleaning tool', 'Cleaning Tool', 'cleaning done', 'Cleaning Done', 'last cleaned', 'Last Cleaned', 'next due', 'Machine Cleaning Tracker', etc.) to use 'Machine Part' terminology throughout the frontend UI. For example: 'Cleaning Tool' → 'Machine Part', 'Cleaning Done' → 'Machine Part Done', 'Last Cleaned' → 'Last Replaced', 'Next Due' → 'Next Due', page title 'Machine Cleaning Tracker' → 'Machine Part Tracker', button labels, card labels, modal titles, form field labels, banner text, and stats bar labels must all reflect the new naming.",
+      "featureId": "feature-after-a-successful-login-automatically-navigate-the-user-to-a-new-add-contact-details-screen-tab-instead-of-landing-directly-on-the-dashboard",
+      "featureTitle": "After a successful login, automatically navigate the user to a new 'Add Contact Details' screen/tab instead of landing directly on the Dashboard.",
       "files": [
-        "frontend/index.html",
-        "frontend/src/components/AddMachineModal.tsx",
-        "frontend/src/components/EditMachineModal.tsx",
-        "frontend/src/components/MachineCard.tsx",
-        "frontend/src/components/MachineFormFields.tsx",
-        "frontend/src/components/OverdueAlertBanner.tsx",
-        "frontend/src/components/RescheduleDateModal.tsx",
-        "frontend/src/components/StatsBar.tsx",
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/Dashboard.tsx",
-        "frontend/src/utils/dateUtils.ts"
+        "frontend/src/App.tsx",
+        "frontend/src/pages/AddContactDetailsPage.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -23,10 +14,73 @@
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
       ],
       "testIds": [
         "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-on-the-add-contact-details-screen-display-the-logged-in-user-s-name-prominently-at-the-top-of-the-page",
+      "featureTitle": "On the 'Add Contact Details' screen, display the logged-in user's name prominently at the top of the page.",
+      "files": [
+        "frontend/src/pages/AddContactDetailsPage.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-an-add-contact-details-form-screen-with-fields-for-the-user-to-enter-their-contact-information-full-name-phone-number-email-address-include-a-save-button-to-submit-and-a-skip-button-to-proceed-to-the-dashboard-without-saving",
+      "featureTitle": "Create an 'Add Contact Details' form screen with fields for the user to enter their contact information (full name, phone number, email address). Include a 'Save' button to submit and a 'Skip' button to proceed to the Dashboard without saving.",
+      "files": [
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/pages/AddContactDetailsPage.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-after-saving-or-skipping-the-contact-details-step-navigate-the-user-to-the-main-dashboard",
+      "featureTitle": "After saving or skipping the contact details step, navigate the user to the main Dashboard.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/pages/AddContactDetailsPage.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
       ],
       "confidence": "high"
     }

@@ -1,10 +1,14 @@
 # Specification
 
 ## Summary
-**Goal:** Rename all "cleaning" terminology to "Machine Part" terminology throughout the CleanTrack application (frontend UI and backend data model).
+**Goal:** After login, redirect the user to a new "Add Contact Details" screen before reaching the Dashboard, display their name at the top, and allow them to save or skip contact details.
 
 **Planned changes:**
-- Replace all user-visible occurrences of "Cleaning", "cleaning", "Cleaning Tool", "Machine Cleaning Tracker", "Cleaning Done", "Last Cleaned", etc. with "Machine Part", "Machine Part Tracker", "Part Done", "Last Replaced", and equivalent terms across all frontend components (MachineCard, AddMachineModal, EditMachineModal, MachineFormFields, stats bar, overdue alert banner, page title, button labels)
-- Rename the `cleaningTool` field in the backend Motoko actor (`backend/main.mo`) to `machinePart` and update all related CRUD operations accordingly
+- After successful login, navigate to a new "Add Contact Details" screen instead of the Dashboard
+- Display the logged-in user's name prominently at the top of the Add Contact Details screen
+- Add a form with fields for full name, phone number, and email address, with basic validation
+- Include a "Save" button (submits details, then navigates to Dashboard) and a "Skip" button (navigates directly to Dashboard)
+- Add backend methods to save and retrieve contact details (full name, phone, email) associated with a user principal, persisted across upgrades
+- Skip the contact details screen on subsequent logins if details have already been saved
 
-**User-visible outcome:** The app displays "Machine Part" terminology everywhere instead of "Cleaning" — including the page title, card labels, form fields, modal headers, buttons, and stats bar — with no remaining references to "cleaning" in the UI.
+**User-visible outcome:** After logging in, users are taken to an "Add Contact Details" screen showing their name, where they can fill in and save their contact info or skip to go straight to the Dashboard.

@@ -25,6 +25,16 @@ export const MachinePart = IDL.Variant({
   'mistUnit' : IDL.Null,
   'coolantFiltrationUnit' : IDL.Null,
 });
+export const UserRole = IDL.Variant({
+  'admin' : IDL.Null,
+  'user' : IDL.Null,
+  'guest' : IDL.Null,
+});
+export const Contact = IDL.Record({
+  'fullName' : IDL.Text,
+  'email' : IDL.Text,
+  'phone' : IDL.Text,
+});
 export const Machine = IDL.Record({
   'id' : IDL.Text,
   'lastCleaningDone' : Time,
@@ -33,6 +43,12 @@ export const Machine = IDL.Record({
   'machineNo' : IDL.Opt(IDL.Text),
   'machinePart' : MachinePart,
 });
+export const LogEntry = IDL.Record({
+  'userId' : IDL.Vec(IDL.Nat8),
+  'timestamp' : Time,
+  'eventType' : IDL.Text,
+});
+export const UserProfile = IDL.Record({ 'name' : IDL.Text });
 
 export const idlService = IDL.Service({
   '_caffeineStorageBlobIsLive' : IDL.Func(
@@ -61,15 +77,30 @@ export const idlService = IDL.Service({
       [],
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
+  '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'addMachine' : IDL.Func(
       [IDL.Text, IDL.Text, Time, Time, IDL.Opt(IDL.Text), MachinePart],
       [],
       [],
     ),
+  'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'deleteMachine' : IDL.Func([IDL.Text], [], []),
+  'getAllContacts' : IDL.Func([], [IDL.Vec(Contact)], ['query']),
   'getAllMachines' : IDL.Func([], [IDL.Vec(Machine)], ['query']),
+  'getAuditLogs' : IDL.Func([], [IDL.Vec(LogEntry)], ['query']),
+  'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+  'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getMachine' : IDL.Func([IDL.Text], [Machine], ['query']),
   'getMachinesByName' : IDL.Func([IDL.Text], [IDL.Vec(Machine)], ['query']),
+  'getUserProfile' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Opt(UserProfile)],
+      ['query'],
+    ),
+  'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'logEvent' : IDL.Func([IDL.Vec(IDL.Nat8), IDL.Text], [], []),
+  'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'saveContact' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
   'updateMachine' : IDL.Func(
       [
         IDL.Text,
@@ -104,6 +135,16 @@ export const idlFactory = ({ IDL }) => {
     'mistUnit' : IDL.Null,
     'coolantFiltrationUnit' : IDL.Null,
   });
+  const UserRole = IDL.Variant({
+    'admin' : IDL.Null,
+    'user' : IDL.Null,
+    'guest' : IDL.Null,
+  });
+  const Contact = IDL.Record({
+    'fullName' : IDL.Text,
+    'email' : IDL.Text,
+    'phone' : IDL.Text,
+  });
   const Machine = IDL.Record({
     'id' : IDL.Text,
     'lastCleaningDone' : Time,
@@ -112,6 +153,12 @@ export const idlFactory = ({ IDL }) => {
     'machineNo' : IDL.Opt(IDL.Text),
     'machinePart' : MachinePart,
   });
+  const LogEntry = IDL.Record({
+    'userId' : IDL.Vec(IDL.Nat8),
+    'timestamp' : Time,
+    'eventType' : IDL.Text,
+  });
+  const UserProfile = IDL.Record({ 'name' : IDL.Text });
   
   return IDL.Service({
     '_caffeineStorageBlobIsLive' : IDL.Func(
@@ -140,15 +187,30 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
+    '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'addMachine' : IDL.Func(
         [IDL.Text, IDL.Text, Time, Time, IDL.Opt(IDL.Text), MachinePart],
         [],
         [],
       ),
+    'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'deleteMachine' : IDL.Func([IDL.Text], [], []),
+    'getAllContacts' : IDL.Func([], [IDL.Vec(Contact)], ['query']),
     'getAllMachines' : IDL.Func([], [IDL.Vec(Machine)], ['query']),
+    'getAuditLogs' : IDL.Func([], [IDL.Vec(LogEntry)], ['query']),
+    'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+    'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getMachine' : IDL.Func([IDL.Text], [Machine], ['query']),
     'getMachinesByName' : IDL.Func([IDL.Text], [IDL.Vec(Machine)], ['query']),
+    'getUserProfile' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(UserProfile)],
+        ['query'],
+      ),
+    'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'logEvent' : IDL.Func([IDL.Vec(IDL.Nat8), IDL.Text], [], []),
+    'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'saveContact' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
     'updateMachine' : IDL.Func(
         [
           IDL.Text,

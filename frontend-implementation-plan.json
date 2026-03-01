@@ -1,0 +1,81 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Rename 'Cleaning' to 'Machine Part' throughout the app",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Rename all user-facing occurrences of 'cleaning' terminology to 'Machine Part' terminology throughout the frontend UI",
+      "acceptanceCriteria": [
+        "No user-visible text contains the word 'cleaning' or 'Cleaning' anywhere in the UI",
+        "All form fields, modal headers, card labels, and button text use 'Machine Part' or equivalent renamed terminology",
+        "The page/app title reflects 'Machine Part' instead of 'Cleaning'",
+        "The 'Cleaning Tool' field label is renamed to 'Machine Part' in AddMachineModal, EditMachineModal, MachineFormFields, and MachineCard",
+        "The 'Cleaning Done' button on MachineCard is renamed to 'Part Done' or 'Machine Part Done'",
+        "The overdue alert banner and stats bar use updated terminology"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/index.html",
+          "operation": "modify",
+          "description": "Update the page title from 'Machine Cleaning Tracker' to 'Machine Part Tracker' in the <title> tag"
+        },
+        {
+          "path": "frontend/src/components/AddMachineModal.tsx",
+          "operation": "modify",
+          "description": "Rename all 'cleaning' references: change dialog title from 'Add Machine' context to reference 'Machine Part', update field labels from 'Cleaning Tool' to 'Machine Part', update 'Last Cleaned' to 'Last Replaced', and ensure button text reflects the new terminology"
+        },
+        {
+          "path": "frontend/src/components/EditMachineModal.tsx",
+          "operation": "modify",
+          "description": "Rename all 'cleaning' references: update dialog title and description text, change 'Cleaning Tool' field label to 'Machine Part', update 'Last Cleaned' to 'Last Replaced', and ensure all form labels use the new terminology"
+        },
+        {
+          "path": "frontend/src/components/MachineFormFields.tsx",
+          "operation": "modify",
+          "description": "Rename form field labels: change 'Cleaning Tool' to 'Machine Part', update 'Last Cleaned' to 'Last Replaced', update 'Next Due' label if it references cleaning context, and ensure placeholder text reflects the new terminology"
+        },
+        {
+          "path": "frontend/src/components/MachineCard.tsx",
+          "operation": "modify",
+          "description": "Rename all 'cleaning' references in the card UI: change 'Cleaning Tool' display label to 'Machine Part', rename 'Cleaning Done' button to 'Part Done' or 'Machine Part Done', update 'Last Cleaned' to 'Last Replaced', and ensure all tooltips and card text reflect the new terminology"
+        },
+        {
+          "path": "frontend/src/components/OverdueAlertBanner.tsx",
+          "operation": "modify",
+          "description": "Update alert banner text to replace any 'cleaning' references with 'Machine Part' terminology, ensuring overdue messaging uses 'part replacement' or equivalent phrasing instead of cleaning-related terms"
+        },
+        {
+          "path": "frontend/src/components/StatsBar.tsx",
+          "operation": "modify",
+          "description": "Update stats bar tile labels and descriptive text to replace any 'cleaning' status references with 'Machine Part' terminology, ensuring metric labels reflect part maintenance rather than cleaning operations"
+        },
+        {
+          "path": "frontend/src/components/StatusBadge.tsx",
+          "operation": "modify",
+          "description": "Update status badge labels and tooltip text to replace any 'cleaning' references with 'Machine Part' or part replacement terminology if applicable"
+        },
+        {
+          "path": "frontend/src/components/RescheduleDateModal.tsx",
+          "operation": "modify",
+          "description": "Update modal title and description text to replace any 'cleaning' or 'next due' context references with 'Machine Part' terminology, ensuring the date picker label reflects part replacement scheduling"
+        },
+        {
+          "path": "frontend/src/pages/Dashboard.tsx",
+          "operation": "modify",
+          "description": "Update the dashboard page header title from 'Machine Cleaning Tracker' to 'Machine Part Tracker' and ensure any other text on the page uses the new terminology"
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Rename the 'markCleaningDone' mutation hook to 'markPartDone' or 'markMachinePartDone' and update any related function names or comments that reference cleaning terminology to use Machine Part terminology instead"
+        },
+        {
+          "path": "frontend/src/utils/dateUtils.ts",
+          "operation": "modify",
+          "description": "Update any function names, comments, or exported utility names that reference 'cleaning' to use 'Machine Part' or part replacement terminology, ensuring utility function signatures reflect the new domain language"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-03-01T00:15:38.832Z",
+  "summary": "The diff implements both REQ-1 and REQ-2 comprehensively. All user-facing 'cleaning' terminology has been renamed to 'Machine Part' equivalents across frontend components, and the backend Motoko actor has been updated to use 'machinePart' instead of 'cleaningTool'. A migration module was also added to handle the field rename for existing data.",
+  "missing_requirements": [],
+  "hallucinated_features": [
+    {
+      "description": "A backend migration module (backend/migration.mo) was added to handle data migration from the old 'cleaningTool' field to the new 'machinePart' field, including OldMachine/NewMachine type definitions and a run() migration function.",
+      "reason": "The build request only asked to rename the field in backend/main.mo and update CRUD operations. No migration module or data migration logic was requested.",
+      "evidence": [
+        "backend/migration.mo",
+        "backend/main.mo"
+      ]
+    }
+  ],
+  "confidence": 0.88,
+  "changed_files": [
+    "backend/main.mo",
+    "backend/migration.mo",
+    "frontend-file-summaries.txt",
+    "frontend/index.html",
+    "frontend/src/components/AddMachineModal.tsx",
+    "frontend/src/components/EditMachineModal.tsx",
+    "frontend/src/components/MachineCard.tsx",
+    "frontend/src/components/MachineFormFields.tsx",
+    "frontend/src/components/OverdueAlertBanner.tsx",
+    "frontend/src/components/RescheduleDateModal.tsx",
+    "frontend/src/components/StatsBar.tsx",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/pages/Dashboard.tsx",
+    "frontend/src/utils/dateUtils.ts",
+    "project_state.json"
+  ]
+}

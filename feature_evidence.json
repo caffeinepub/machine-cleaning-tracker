@@ -1,0 +1,34 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-rename-all-user-facing-occurrences-of-cleaning-and-its-variants-cleaning-cleaning-cleaning-tool-cleaning-tool-cleaning-done-cleaning-done-last-cleaned-last-cleaned-next-due-machine-cleaning-tracker-etc-to-use-machine-part-terminology-throughout-the-frontend-ui-for-example-cleaning-tool-machine-part-cleaning-done-machine-part-done-last-cleaned-last-replaced-next-due-next-due-page-title-machine-cleaning-tracker-machine-part-tracker-button-labels-card-labels-modal-titles-form-field-labels-banner-text-and-stats-bar-labels-must-all-reflect-the-new-naming",
+      "featureTitle": "Rename all user-facing occurrences of 'cleaning' (and its variants: 'Cleaning', 'CLEANING', 'cleaning tool', 'Cleaning Tool', 'cleaning done', 'Cleaning Done', 'last cleaned', 'Last Cleaned', 'next due', 'Machine Cleaning Tracker', etc.) to use 'Machine Part' terminology throughout the frontend UI. For example: 'Cleaning Tool' → 'Machine Part', 'Cleaning Done' → 'Machine Part Done', 'Last Cleaned' → 'Last Replaced', 'Next Due' → 'Next Due', page title 'Machine Cleaning Tracker' → 'Machine Part Tracker', button labels, card labels, modal titles, form field labels, banner text, and stats bar labels must all reflect the new naming.",
+      "files": [
+        "frontend/index.html",
+        "frontend/src/components/AddMachineModal.tsx",
+        "frontend/src/components/EditMachineModal.tsx",
+        "frontend/src/components/MachineCard.tsx",
+        "frontend/src/components/MachineFormFields.tsx",
+        "frontend/src/components/OverdueAlertBanner.tsx",
+        "frontend/src/components/RescheduleDateModal.tsx",
+        "frontend/src/components/StatsBar.tsx",
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/pages/Dashboard.tsx",
+        "frontend/src/utils/dateUtils.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

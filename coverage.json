@@ -1,0 +1,81 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-03-01T00:15:38.835Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 2,
+    "implemented": 1,
+    "items": [
+      {
+        "id": "REQ-1",
+        "summary": "Rename all user-facing occurrences of 'cleaning' (and its variants: 'Cleaning', 'CLEANING', 'cleaning tool', 'Cleaning Tool', 'cleaning done', 'Cleaning Done', 'last cleaned', 'Last Cleaned', 'next due', 'Machine Cleaning Tracker', etc.) to use 'Machine Part' terminology throughout the frontend UI. For example: 'Cleaning Tool' → 'Machine Part', 'Cleaning Done' → 'Machine Part Done', 'Last Cleaned' → 'Last Replaced', 'Next Due' → 'Next Due', page title 'Machine Cleaning Tracker' → 'Machine Part Tracker', button labels, card labels, modal titles, form field labels, banner text, and stats bar labels must all reflect the new naming.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/index.html",
+          "frontend/src/components/AddMachineModal.tsx",
+          "frontend/src/components/EditMachineModal.tsx",
+          "frontend/src/components/MachineFormFields.tsx",
+          "frontend/src/components/MachineCard.tsx",
+          "frontend/src/components/OverdueAlertBanner.tsx",
+          "frontend/src/components/StatsBar.tsx",
+          "frontend/src/components/StatusBadge.tsx",
+          "frontend/src/components/RescheduleDateModal.tsx",
+          "frontend/src/pages/Dashboard.tsx",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/utils/dateUtils.ts"
+        ],
+        "matchedFiles": [
+          "frontend/index.html",
+          "frontend/src/components/AddMachineModal.tsx",
+          "frontend/src/components/EditMachineModal.tsx",
+          "frontend/src/components/MachineFormFields.tsx",
+          "frontend/src/components/MachineCard.tsx",
+          "frontend/src/components/OverdueAlertBanner.tsx",
+          "frontend/src/components/StatsBar.tsx",
+          "frontend/src/components/RescheduleDateModal.tsx",
+          "frontend/src/pages/Dashboard.tsx",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/utils/dateUtils.ts"
+        ]
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Update the backend Motoko actor in backend/main.mo to rename the cleaningTool field and any related type variants or labels from 'cleaning' terminology to 'machinePart' or equivalent, ensuring consistency with the frontend rename.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/index.html",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/AddMachineModal.tsx",
+    "frontend/src/components/EditMachineModal.tsx",
+    "frontend/src/components/MachineCard.tsx",
+    "frontend/src/components/MachineFormFields.tsx",
+    "frontend/src/components/OverdueAlertBanner.tsx",
+    "frontend/src/components/RescheduleDateModal.tsx",
+    "frontend/src/components/StatsBar.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/pages/Dashboard.tsx",
+    "frontend/src/utils/dateUtils.ts",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

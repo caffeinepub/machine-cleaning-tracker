@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "New project",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-rename-all-user-facing-occurrences-of-cleaning-and-its-variants-cleaning-cleaning-cleaning-tool-cleaning-tool-cleaning-done-cleaning-done-last-cleaned-last-cleaned-next-due-machine-cleaning-tracker-etc-to-use-machine-part-terminology-throughout-the-frontend-ui-for-example-cleaning-tool-machine-part-cleaning-done-machine-part-done-last-cleaned-last-replaced-next-due-next-due-page-title-machine-cleaning-tracker-machine-part-tracker-button-labels-card-labels-modal-titles-form-field-labels-banner-text-and-stats-bar-labels-must-all-reflect-the-new-naming",
+      "title": "Rename all user-facing occurrences of 'cleaning' (and its variants: 'Cleaning', 'CLEANING', 'cleaning tool', 'Cleaning Tool', 'cleaning done', 'Cleaning Done', 'last cleaned', 'Last Cleaned', 'next due', 'Machine Cleaning Tracker', etc.) to use 'Machine Part' terminology throughout the frontend UI. For example: 'Cleaning Tool' → 'Machine Part', 'Cleaning Done' → 'Machine Part Done', 'Last Cleaned' → 'Last Replaced', 'Next Due' → 'Next Due', page title 'Machine Cleaning Tracker' → 'Machine Part Tracker', button labels, card labels, modal titles, form field labels, banner text, and stats bar labels must all reflect the new naming.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Rename 'cleaning' label to 'Machine part'",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Update the backend Motoko actor in backend/main.mo to rename the cleaningTool field and any related type variants or labels from 'cleaning' terminology to 'machinePart' or equivalent, ensuring consistency with the frontend rename.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    }
+  ],
+  "projectName": "CleanTrack",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

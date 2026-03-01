@@ -1,0 +1,60 @@
+{
+  "kind": "build_request",
+  "title": "Rename 'Cleaning' to 'Machine Part' throughout the app",
+  "projectName": "CleanTrack",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Rename all user-facing occurrences of 'cleaning' (and its variants: 'Cleaning', 'CLEANING', 'cleaning tool', 'Cleaning Tool', 'cleaning done', 'Cleaning Done', 'last cleaned', 'Last Cleaned', 'next due', 'Machine Cleaning Tracker', etc.) to use 'Machine Part' terminology throughout the frontend UI. For example: 'Cleaning Tool' → 'Machine Part', 'Cleaning Done' → 'Machine Part Done', 'Last Cleaned' → 'Last Replaced', 'Next Due' → 'Next Due', page title 'Machine Cleaning Tracker' → 'Machine Part Tracker', button labels, card labels, modal titles, form field labels, banner text, and stats bar labels must all reflect the new naming.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-recent"
+        ],
+        "quotes": [
+          "change name cleaning to Machine part"
+        ]
+      },
+      "acceptanceCriteria": [
+        "No user-visible text contains the word 'cleaning' or 'Cleaning' anywhere in the UI",
+        "All form fields, modal headers, card labels, and button text use 'Machine Part' or equivalent renamed terminology",
+        "The page/app title reflects 'Machine Part' instead of 'Cleaning'",
+        "The 'Cleaning Tool' field label is renamed to 'Machine Part' in AddMachineModal, EditMachineModal, MachineFormFields, and MachineCard",
+        "The 'Cleaning Done' button on MachineCard is renamed to 'Part Done' or 'Machine Part Done'",
+        "The overdue alert banner and stats bar use updated terminology"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Update the backend Motoko actor in backend/main.mo to rename the cleaningTool field and any related type variants or labels from 'cleaning' terminology to 'machinePart' or equivalent, ensuring consistency with the frontend rename.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-recent"
+        ],
+        "quotes": [
+          "change name cleaning to Machine part"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The Machine type field previously named cleaningTool is renamed to machinePart (or equivalent) in the Motoko actor",
+        "All CRUD operations referencing the old field name are updated accordingly",
+        "The backend compiles without errors after the rename"
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not alter any files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui",
+    "Do not change any functional logic — only rename labels and field names"
+  ],
+  "nonGoals": [
+    "Adding new features or changing any business logic",
+    "Redesigning the UI layout or visual theme",
+    "Changing date/status logic"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

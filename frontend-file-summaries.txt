@@ -1,0 +1,19 @@
+{
+  "frontend/src/index.css": "Global styles with industrial theme — dark steel-grey and orange OKLCH color tokens, Barlow/Barlow Condensed fonts, and status color variables for ok/warn/danger states.",
+  "frontend/tailwind.config.js": "Tailwind config extended with Barlow font families, status-ok/warn/danger color tokens, card shadow utilities, and all existing shadcn color mappings.",
+  "frontend/src/utils/dateUtils.ts": "Utility functions for IC bigint Time ↔ JS Date conversion, days-until-due, machine status, date formatting, and calculateNextDueFromToday helper — comment updated to reference part replacement interval instead of cleaning interval.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for all backend operations; updated to use MachinePart instead of CleaningTool, renamed useMarkCleaningDone to useMarkPartDone, and updated mutation parameter field from cleaningTool to machinePart.",
+  "frontend/src/components/StatusBadge.tsx": "Color-coded status badge component showing green/yellow/red pill with animated dot based on machine due date proximity.",
+  "frontend/src/components/MachineCard.tsx": "Machine card component updated to use MachinePart enum and machinePart field, renamed \"Cleaning Done\" button to \"Part Done\", updated \"Last Cleaned\" label to \"Last Replaced\", renamed \"Cleaning Tool\" display to \"Machine Part\", and swapped Droplets icon for Settings2.",
+  "frontend/src/components/MachineFormFields.tsx": "Shared form fields component updated to use MachinePart enum, renamed field from cleaningTool to machinePart, updated labels from \"Cleaning Tool\" to \"Machine Part\" and \"Last Cleaned Date\" to \"Last Replaced Date\", and updated validation messages accordingly.",
+  "frontend/src/components/AddMachineModal.tsx": "Dialog modal for adding a new machine; updated to use MachinePart enum and machinePart field name, updated description text to reference \"last replaced date\" instead of \"last cleaning date\".",
+  "frontend/src/components/EditMachineModal.tsx": "Dialog modal for editing an existing machine; updated to use MachinePart enum and machinePart field name, pre-populating from machine.machinePart instead of machine.cleaningTool.",
+  "frontend/src/components/DeleteConfirmDialog.tsx": "AlertDialog confirmation component for machine deletion with loading state during the backend call.",
+  "frontend/src/components/OverdueAlertBanner.tsx": "Dismissible alert banner updated to display \"Machine Part Overdue for Replacement\" messaging instead of \"Overdue for Cleaning\".",
+  "frontend/src/components/StatsBar.tsx": "Summary statistics bar with updated \"Overdue\" label renamed to \"Part Overdue\" to reflect machine part terminology.",
+  "frontend/src/pages/Dashboard.tsx": "Main dashboard page with header branding updated from \"CleanTrack / Machine Cleaning Manager\" to \"PartTrack / Machine Part Manager\", empty state text updated to reference part replacements, and footer updated with new app name.",
+  "frontend/src/App.tsx": "Root app component that renders the Dashboard page directly.",
+  "frontend/src/lib/utils.ts": "Utility function cn() combining clsx and tailwind-merge for conditional class name composition.",
+  "frontend/src/components/RescheduleDateModal.tsx": "Dialog modal for rescheduling; updated title from \"Reschedule Cleaning\" to \"Reschedule Machine Part\".",
+  "frontend/index.html": "HTML entry point with updated page title changed from \"Machine Cleaning Tracker\" to \"Machine Part Tracker\"."
+}

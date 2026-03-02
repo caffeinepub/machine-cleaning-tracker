@@ -56,7 +56,7 @@ export function RescheduleDateModal({ machine, open, onOpenChange }: RescheduleD
                 <DialogHeader>
                     <DialogTitle className="font-condensed text-xl flex items-center gap-2">
                         <CalendarClock className="w-5 h-5 text-yellow-500" />
-                        Reschedule Machine Part
+                        Reschedule Machine Cleaning
                     </DialogTitle>
                     <DialogDescription>
                         Set a new next due date for <strong>{machine.name}</strong>.

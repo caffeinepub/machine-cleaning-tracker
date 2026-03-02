@@ -107,7 +107,7 @@ export function MachineCard({ machine }: MachineCardProps) {
                             <CalendarCheck className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
                             <div>
                                 <p className="text-xs text-muted-foreground uppercase tracking-wide font-semibold mb-0.5">
-                                    Last Replaced
+                                    Last Cleaned
                                 </p>
                                 <p className="text-sm font-semibold text-foreground">
                                     {formatDate(machine.lastCleaningDone)}
@@ -147,7 +147,7 @@ export function MachineCard({ machine }: MachineCardProps) {
                             <Settings2 className="w-3.5 h-3.5 text-primary flex-shrink-0" />
                             <div>
                                 <span className="text-xs text-muted-foreground uppercase tracking-wide font-semibold mr-1.5">
-                                    Machine Part:
+                                    Machine Cleaning:
                                 </span>
                                 <span className="text-xs font-semibold text-foreground">
                                     {MACHINE_PART_LABELS[machine.machinePart] ?? machine.machinePart}
@@ -178,7 +178,7 @@ export function MachineCard({ machine }: MachineCardProps) {
                         </Button>
                     </div>
 
-                    {/* Part Done / Reschedule row */}
+                    {/* Cleaning Done / Reschedule row */}
                     <div className="flex items-center gap-2 pt-2 mt-1">
                         <Button
                             size="sm"
@@ -196,7 +196,7 @@ export function MachineCard({ machine }: MachineCardProps) {
                             ) : (
                                 <CheckCircle2 className="w-3 h-3" />
                             )}
-                            {partDone ? 'Done ✓' : 'Part Done'}
+                            {partDone ? 'Done ✓' : 'Cleaning Done'}
                         </Button>
                         <Button
                             size="sm"

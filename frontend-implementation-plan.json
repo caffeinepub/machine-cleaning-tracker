@@ -1,84 +1,113 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add Contact Details tab after login with user name display",
+  "title": "Fix all broken backend, frontend, auth, and date utility issues",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "After successful login, navigate user to 'Add Contact Details' screen instead of Dashboard",
+      "id": "REQ-11",
+      "summary": "Audit and fix all frontend issues across all pages and components, including broken React Query hooks, incorrect data fetching/mutation logic, broken modal dialogs, malfunctioning alert banners, and rendering errors",
       "acceptanceCriteria": [
-        "After a successful phone number login, the app transitions to an 'Add Contact Details' screen.",
-        "The Dashboard is not shown until the user completes or skips the contact details step.",
-        "The contact details screen is visually distinct (e.g., a full-page card or tab-style layout)."
+        "All React Query hooks in useQueries.ts fetch and mutate data correctly with proper cache invalidation",
+        "AddMachineModal and EditMachineModal open, validate, and submit correctly",
+        "DeleteConfirmDialog and RescheduleDateModal function without errors",
+        "DueTodayAlertBanner and OverdueAlertBanner display correct machines and dismiss properly",
+        "Dashboard.tsx renders without errors and all interactions work",
+        "AddContactDetailsPage.tsx renders and submits correctly"
       ],
       "file_operations": [
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Add routing logic to conditionally render AddContactDetailsPage or Dashboard based on whether the user has saved contact details. Check contact details status after authentication using a query hook, then render AddContactDetailsPage if no contact details exist, otherwise render Dashboard."
-        },
-        {
-          "path": "frontend/src/pages/AddContactDetailsPage.tsx",
-          "operation": "create",
-          "description": "Create a new full-page component for the Add Contact Details screen. This page will be shown immediately after login if the user has not yet saved contact details. Include a card-style layout with the user's name at the top, a form for contact details, and Save/Skip buttons."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Display logged-in user's name prominently at top of Add Contact Details screen",
-      "acceptanceCriteria": [
-        "The user's name is displayed at the top of the Add Contact Details screen after login.",
-        "The name text is clearly readable and styled consistently with the app's design."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/AddContactDetailsPage.tsx",
-          "operation": "modify",
-          "description": "Fetch the user's profile using the useGetCallerUserProfile query hook. Display the user's name at the top of the page in a prominent heading. If no profile exists yet (null), display a fallback greeting such as 'Welcome'. Style the name text using Tailwind classes consistent with the app's design tokens."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Create Add Contact Details form with fields for full name, phone, email, and Save/Skip buttons",
-      "acceptanceCriteria": [
-        "The form includes fields for full name, phone number, and email address.",
-        "A 'Save' button submits the contact details and then navigates to the Dashboard.",
-        "A 'Skip' button allows the user to bypass this step and go directly to the Dashboard.",
-        "Basic validation is applied: phone number format and email format are checked before saving."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/AddContactDetailsPage.tsx",
-          "operation": "modify",
-          "description": "Implement a form with controlled inputs for full name, phone number, and email address. Add validation logic to check phone number format (e.g., digits only, minimum length) and email format (e.g., valid email regex). Include a 'Save' button that triggers form submission via the useSaveContact mutation hook, then navigates to Dashboard on success. Include a 'Skip' button that immediately sets a flag (e.g., localStorage or state) and navigates to Dashboard without saving."
-        },
         {
           "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Add a useSaveContact mutation hook that calls actor.saveContact(fullName, phone, email). After successful mutation, invalidate the 'contacts' query key to refresh any contact-related data. Also add a useGetAllContacts query hook that calls actor.getAllContacts() if needed for future features."
+          "description": "Fix all React Query hooks to ensure proper data fetching, mutation logic, error handling, and cache invalidation. Verify that useGetAllMachines, useAddMachine, useUpdateMachine, useDeleteMachine, useRescheduleNextDue, useGetAuditLogs, useGetCallerUserProfile, useSaveCallerUserProfile, useSaveContact, and useGetAllContacts properly handle actor availability, loading states, error states, and invalidate appropriate query keys after mutations. Ensure all mutations use optimistic updates where appropriate and handle backend errors gracefully."
+        },
+        {
+          "path": "frontend/src/components/AddMachineModal.tsx",
+          "operation": "modify",
+          "description": "Fix form validation, state management, and submission logic in AddMachineModal. Ensure the modal properly resets form state on open/close, validates all required fields (name, machine number, part type, last cleaned date, next due date), handles the useAddMachine mutation correctly with loading and error states, shows appropriate user feedback on success/failure, and closes the modal after successful submission."
+        },
+        {
+          "path": "frontend/src/components/EditMachineModal.tsx",
+          "operation": "modify",
+          "description": "Fix form pre-population, validation, and submission logic in EditMachineModal. Ensure the modal correctly pre-fills form fields from the machine prop, validates changes, handles the useUpdateMachine mutation with proper loading and error states, provides user feedback, and closes after successful update. Verify that date conversions between IC timestamps and form inputs work correctly."
+        },
+        {
+          "path": "frontend/src/components/DeleteConfirmDialog.tsx",
+          "operation": "modify",
+          "description": "Fix the delete confirmation workflow in DeleteConfirmDialog. Ensure the dialog properly receives the machine to delete, displays the correct machine name in the confirmation message, handles the useDeleteMachine mutation with loading spinner display during async operation, shows error feedback if deletion fails, and closes the dialog after successful deletion."
+        },
+        {
+          "path": "frontend/src/components/RescheduleDateModal.tsx",
+          "operation": "modify",
+          "description": "Fix date selection, validation, and submission in RescheduleDateModal. Ensure the modal displays the current next-due date correctly, allows selection of a new future date, validates that the new date is after the current date, handles the useRescheduleNextDue mutation with proper loading and error states, provides user feedback, and closes after successful reschedule."
+        },
+        {
+          "path": "frontend/src/components/DueTodayAlertBanner.tsx",
+          "operation": "modify",
+          "description": "Fix machine filtering, display, and dismiss logic in DueTodayAlertBanner. Ensure the banner correctly identifies machines with cleanings due within 24 hours using dateUtils, displays the correct machine list with proper formatting, handles the dismissible state correctly (persisting dismiss state if needed), and shows/hides based on whether there are due-today machines. Verify animated visual effects work correctly."
+        },
+        {
+          "path": "frontend/src/components/OverdueAlertBanner.tsx",
+          "operation": "modify",
+          "description": "Fix machine filtering, display, and dismiss logic in OverdueAlertBanner. Ensure the banner correctly identifies overdue machines using dateUtils status computation, displays the complete list of overdue machines with proper formatting, handles dismissible state correctly, and shows/hides appropriately. Verify that the banner styling and urgency indicators work as intended."
+        },
+        {
+          "path": "frontend/src/pages/Dashboard.tsx",
+          "operation": "modify",
+          "description": "Fix all rendering, state management, and interaction logic in Dashboard. Ensure the page correctly fetches all machines using useGetAllMachines, displays status banners (DueTodayAlertBanner, OverdueAlertBanner) when appropriate, renders the StatsBar with correct counts, displays the machine list using MachineCard components, handles the add machine button to open AddMachineModal, implements the refresh data functionality correctly, manages Internet Identity login/logout state, and handles all error and loading states gracefully. Verify that all child components receive correct props and callbacks."
+        },
+        {
+          "path": "frontend/src/pages/AddContactDetailsPage.tsx",
+          "operation": "modify",
+          "description": "Fix form validation, submission, and navigation logic in AddContactDetailsPage. Ensure the page validates full name, phone, and email inputs according to the form rules, handles the useSaveContact mutation correctly with loading and error states, provides appropriate user feedback on success/failure, implements the skip functionality if allowed, and navigates to the Dashboard after successful contact save or skip. Verify that the page integrates correctly with the onboarding flow."
+        },
+        {
+          "path": "frontend/src/components/MachineCard.tsx",
+          "operation": "modify",
+          "description": "Fix machine detail display, status badge rendering, and action button handlers in MachineCard. Ensure the card correctly displays machine name, number, part type, last cleaned date, next due date, and status using StatusBadge with accurate status computation from dateUtils. Verify that edit, delete, reschedule, and mark-as-done buttons trigger the correct modals/actions with proper machine context passed. Handle loading and disabled states during mutations."
+        },
+        {
+          "path": "frontend/src/components/StatsBar.tsx",
+          "operation": "modify",
+          "description": "Fix status count computation and display in StatsBar. Ensure the component correctly receives the machines list, computes counts for each status category (ok, due-soon, due-today, overdue) using dateUtils status computation, displays counts with appropriate icons and styling, and applies conditional pulse animations for urgent statuses (due-today, overdue). Verify responsive layout works correctly."
+        },
+        {
+          "path": "frontend/src/components/StatusBadge.tsx",
+          "operation": "modify",
+          "description": "Fix status determination, color coding, and animation in StatusBadge. Ensure the badge correctly receives a machine's status (computed from dateUtils), applies the correct color scheme and styling for each status (ok, due-soon, due-today, overdue), displays the status dot and label correctly, and applies animated effects (pulse, etc.) for urgent statuses. Verify visual consistency across the app."
         }
       ]
     },
     {
-      "id": "REQ-5",
-      "summary": "Navigate to Dashboard after saving or skipping contact details",
+      "id": "REQ-12",
+      "summary": "Fix all issues in the app's authentication and onboarding flow to ensure Internet Identity login correctly triggers AddContactDetailsPage for new users and Dashboard for returning users, with proper logout and localStorage state management",
       "acceptanceCriteria": [
-        "Clicking 'Save' on the contact details form navigates to the Dashboard after successful submission.",
-        "Clicking 'Skip' immediately navigates to the Dashboard.",
-        "The contact details screen does not reappear on subsequent logins if details have already been saved."
+        "New users are directed to AddContactDetailsPage after logging in via Internet Identity",
+        "Returning users with completed onboarding are directed to Dashboard after login",
+        "Logout clears per-principal localStorage state correctly",
+        "Identity change detection in App.tsx works reliably"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/AddContactDetailsPage.tsx",
-          "operation": "modify",
-          "description": "Implement navigation logic using React state or a simple flag. On 'Save' button click, submit the form via useSaveContact mutation, then set a completion flag and trigger a re-render or navigation to Dashboard. On 'Skip' button click, set the same completion flag immediately and navigate to Dashboard. The completion flag can be a local state variable that triggers App.tsx to render Dashboard instead of AddContactDetailsPage."
-        },
-        {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Add logic to check if the user has saved contact details by querying the backend (e.g., useGetAllContacts and checking if any contact exists for the current user, or adding a dedicated query). If contact details exist, render Dashboard. If not, render AddContactDetailsPage. Ensure this check only runs after authentication is confirmed. This prevents the contact details screen from reappearing on subsequent logins."
+          "description": "Fix authentication flow, identity change detection, and conditional rendering logic in App.tsx. Ensure the component correctly detects fresh login by comparing current identity with stored identity, persists completion state in localStorage per principal (using principal ID as key), checks user profile status via useGetCallerUserProfile to determine if onboarding is complete, conditionally renders AddContactDetailsPage for new users without a profile and Dashboard for returning users with a profile, handles logout by clearing per-principal localStorage state, and manages loading states during identity and profile checks to prevent flashing content. Verify that identity changes are detected reliably and trigger appropriate navigation."
+        }
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "summary": "Fix all issues with date utilities including correct IC timestamp conversion, accurate machine cleaning status computation, and correct next-due-date calculation logic",
+      "acceptanceCriteria": [
+        "IC nanosecond timestamps are correctly converted to and from JavaScript Date objects",
+        "Machine cleaning status (ok, due-soon, due-today, overdue) is computed accurately based on next-due date",
+        "Next-due-date calculation produces correct results",
+        "StatsBar and StatusBadge reflect correct statuses derived from dateUtils"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/utils/dateUtils.ts",
+          "operation": "modify",
+          "description": "Fix all date conversion and status computation logic in dateUtils. Ensure IC nanosecond timestamps (bigint) are correctly converted to JavaScript Date objects and vice versa, accounting for the nanosecond-to-millisecond conversion factor (1e6). Fix the machine cleaning status computation function to accurately determine status (ok, due-soon, due-today, overdue) based on the next-due date: overdue if next-due is in the past, due-today if next-due is within 24 hours, due-soon if next-due is within a configurable threshold (e.g., 7 days), and ok otherwise. Fix next-due-date calculation logic to correctly compute the next cleaning date based on last-cleaned date and cleaning interval. Verify date formatting functions produce correct human-readable output. Ensure all edge cases (null dates, invalid timestamps, timezone handling) are handled correctly."
         }
       ]
     }

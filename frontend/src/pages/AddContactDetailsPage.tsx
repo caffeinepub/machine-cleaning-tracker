@@ -92,15 +92,15 @@ export function AddContactDetailsPage({ onComplete, userName }: AddContactDetail
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-3">
                     <img
                         src="/assets/generated/logo-cleantrack.dim_256x256.png"
-                        alt="Machine Part Tracker Logo"
+                        alt="Machine Cleaning Tracker Logo"
                         className="w-9 h-9 rounded-md object-cover"
                     />
                     <div>
                         <h1 className="font-condensed text-xl font-bold leading-none text-foreground tracking-wide">
-                            PartTrack
+                            Machine Cleaning Tracker
                         </h1>
                         <p className="text-xs text-muted-foreground font-medium leading-none mt-0.5">
-                            Machine Part Manager
+                            Machine Cleaning Tracker
                         </p>
                     </div>
                 </div>
@@ -199,7 +199,7 @@ export function AddContactDetailsPage({ onComplete, userName }: AddContactDetail
                                     )}
                                 </div>
 
-                                {/* Email */}
+                                {/* Email Address */}
                                 <div className="space-y-1.5">
                                     <Label htmlFor="contact-email" className="text-sm font-medium">
                                         Email Address
@@ -225,34 +225,30 @@ export function AddContactDetailsPage({ onComplete, userName }: AddContactDetail
                                     )}
                                 </div>
 
-                                {/* Action Buttons */}
-                                <div className="flex gap-3 pt-1">
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        className="flex-1 gap-1.5 font-semibold"
-                                        onClick={handleSkip}
-                                        disabled={saveContact.isPending}
-                                    >
-                                        <SkipForward className="w-4 h-4" />
-                                        Skip
-                                    </Button>
+                                <div className="flex gap-2 pt-1">
                                     <Button
                                         type="submit"
                                         className="flex-1 gap-1.5 font-semibold"
                                         disabled={saveContact.isPending}
                                     >
                                         {saveContact.isPending ? (
-                                            <>
-                                                <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                                                Saving…
-                                            </>
+                                            <>Saving…</>
                                         ) : (
                                             <>
-                                                Save & Continue
                                                 <ArrowRight className="w-4 h-4" />
+                                                Save &amp; Continue
                                             </>
                                         )}
+                                    </Button>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        className="gap-1.5 font-semibold"
+                                        onClick={handleSkip}
+                                        disabled={saveContact.isPending}
+                                    >
+                                        <SkipForward className="w-4 h-4" />
+                                        Skip
                                     </Button>
                                 </div>
                             </form>
@@ -264,13 +260,13 @@ export function AddContactDetailsPage({ onComplete, userName }: AddContactDetail
             {/* Footer */}
             <footer className="border-t border-border bg-card mt-auto">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
-                    <span>© {new Date().getFullYear()} PartTrack — Machine Part Manager</span>
+                    <span>© {new Date().getFullYear()} Machine Cleaning Tracker</span>
                     <span>
                         Built with{' '}
                         <span className="text-primary">♥</span>{' '}
                         using{' '}
                         <a
-                            href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(typeof window !== 'undefined' ? window.location.hostname : 'parttrack')}`}
+                            href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(typeof window !== 'undefined' ? window.location.hostname : 'machine-cleaning-tracker')}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="underline hover:text-foreground transition-colors"

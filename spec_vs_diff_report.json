@@ -1,62 +1,41 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-03-01T01:12:57.941Z",
-  "summary": "The diff implements most of the requested requirements: a new AddContactDetailsPage with form fields, save/skip navigation, backend contact storage, and post-login routing. However, REQ-2 (displaying the logged-in user's name prominently at the top) is only partially implemented — the component supports a userName prop but App.tsx never passes it. The backend lacks a visible retrieve method for contact details as required by REQ-4. The migration module returns an empty contacts list rather than persisting existing data. There is also a constraint violation: useActor.ts was modified despite the constraint prohibiting it.",
+  "generatedAt": "2026-03-02T01:25:34.332Z",
+  "summary": "The diff shows only backend/main.mo (truncated), a new backend/migration.mo, and project_state.json were changed. REQ-10 (backend fixes) has partial evidence in backend/main.mo. REQ-11 (frontend fixes), REQ-12 (auth/onboarding flow fixes), and REQ-13 (date utilities fixes) have no evidence of implementation in the diff — no frontend files were modified.",
   "missing_requirements": [
     {
-      "id": "REQ-2",
-      "requirement": "Display the logged-in user's name prominently at the top of the Add Contact Details screen after login.",
-      "reason": "AddContactDetailsPage accepts a userName prop and fetches userProfile internally, but App.tsx never passes the userName prop when rendering AddContactDetailsPage, so the name will only display if getCallerUserProfile returns data from a prior saveCallerUserProfile call that may not have occurred at this point in the flow.",
-      "evidence": [
-        "frontend/src/App.tsx",
-        "frontend/src/pages/AddContactDetailsPage.tsx"
-      ]
+      "id": "REQ-11",
+      "requirement": "Audit and fix all frontend issues across all pages and components, including broken React Query hooks in useQueries.ts, incorrect data fetching or mutation logic, broken modal dialogs (AddMachineModal, EditMachineModal, DeleteConfirmDialog, RescheduleDateModal), malfunctioning alert banners (DueTodayAlertBanner, OverdueAlertBanner), and any rendering errors or broken UI interactions in Dashboard.tsx and AddContactDetailsPage.tsx.",
+      "reason": "No frontend files were modified or added in the diff. Files like useQueries.ts, AddMachineModal, EditMachineModal, DeleteConfirmDialog, RescheduleDateModal, DueTodayAlertBanner, OverdueAlertBanner, Dashboard.tsx, and AddContactDetailsPage.tsx are entirely absent from the diff.",
+      "evidence": []
     },
     {
-      "id": "REQ-4",
-      "requirement": "The backend actor has a method to retrieve contact details for a given principal.",
-      "reason": "The backend/main.mo diff shows a saveContact method is called from the frontend mutation, but no getContact or equivalent retrieval query method for contact details is visible in the truncated diff.",
-      "evidence": [
-        "backend/main.mo",
-        "frontend/src/hooks/useQueries.ts"
-      ]
+      "id": "REQ-12",
+      "requirement": "Fix all issues in the app's authentication and onboarding flow: ensure Internet Identity login correctly triggers the AddContactDetailsPage for new users and the Dashboard for returning users, and that logout properly resets the per-principal localStorage state.",
+      "reason": "No frontend files (App.tsx or related auth/onboarding files) were modified in the diff. There is no evidence of changes to authentication flow, onboarding routing, or localStorage state management.",
+      "evidence": []
     },
     {
-      "id": "REQ-4",
-      "requirement": "Contact details persist across canister upgrades.",
-      "reason": "The migration module defines a run function but returns an empty contacts list rather than migrating existing contact data, meaning contacts would be lost on upgrade rather than persisted.",
+      "id": "REQ-13",
+      "requirement": "Fix all issues with date utilities in frontend/src/utils/dateUtils.ts, including correct conversion between IC nanosecond timestamps and JavaScript Dates, accurate machine cleaning status computation (ok, due-soon, due-today, overdue), and correct next-due-date calculation logic.",
+      "reason": "frontend/src/utils/dateUtils.ts was not modified or added in the diff. No changes to StatsBar or StatusBadge components are present either.",
+      "evidence": []
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "A new backend/migration.mo file was added implementing a data migration module converting List types to Array types for auditLogs and contacts.",
+      "reason": "The build request does not mention adding a migration module or converting List to Array storage types. This is an addition beyond fixing existing broken functionality.",
       "evidence": [
         "backend/migration.mo"
       ]
     }
   ],
-  "hallucinated_features": [
-    {
-      "description": "useActor.ts was modified to add getSecretParameter and caffeineAdminToken initialization logic.",
-      "reason": "The build constraints explicitly state 'Do not modify files under frontend/src/hooks/ (useInternetIdentity.ts, useActor.ts)'. The diff shows useActor.ts was modified.",
-      "evidence": [
-        "frontend/src/hooks/useActor.ts"
-      ]
-    },
-    {
-      "description": "A URL parameter utility module with session storage and hash-based routing helpers was added.",
-      "reason": "No requirement requested URL parameter utilities, session parameter storage, or hash-based routing helpers. This is unrelated to the contact details feature.",
-      "evidence": [
-        "frontend/src/utils/urlParams.ts"
-      ]
-    }
-  ],
-  "confidence": 0.72,
+  "confidence": 0.82,
   "changed_files": [
     "backend/main.mo",
     "backend/migration.mo",
-    "frontend-file-summaries.txt",
-    "frontend/src/App.tsx",
-    "frontend/src/hooks/useActor.ts",
-    "frontend/src/hooks/useQueries.ts",
-    "frontend/src/pages/AddContactDetailsPage.tsx",
-    "frontend/src/utils/urlParams.ts",
     "project_state.json"
   ]
 }

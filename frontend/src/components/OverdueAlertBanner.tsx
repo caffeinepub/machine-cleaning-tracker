@@ -22,8 +22,8 @@ export function OverdueAlertBanner({ machines }: OverdueAlertBannerProps) {
             <div className="flex-1 min-w-0">
                 <p className="font-bold text-sm uppercase tracking-wide mb-0.5">
                     {overdueMachines.length === 1
-                        ? '1 Machine Part Overdue for Replacement'
-                        : `${overdueMachines.length} Machine Parts Overdue for Replacement`}
+                        ? '1 Machine Cleaning Overdue'
+                        : `${overdueMachines.length} Machine Cleanings Overdue`}
                 </p>
                 <p className="text-sm opacity-90">
                     {overdueMachines.map((m) => m.name).join(', ')}

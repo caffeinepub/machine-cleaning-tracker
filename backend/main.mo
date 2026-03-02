@@ -2,13 +2,11 @@ import Map "mo:core/Map";
 import Text "mo:core/Text";
 import Time "mo:core/Time";
 import Order "mo:core/Order";
-import Iter "mo:core/Iter";
 import Int "mo:core/Int";
-import Array "mo:core/Array";
 import Runtime "mo:core/Runtime";
-import List "mo:core/List";
-import Blob "mo:core/Blob";
+import Array "mo:core/Array";
 import Principal "mo:core/Principal";
+import Blob "mo:core/Blob";
 import MixinStorage "blob-storage/Mixin";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
@@ -23,7 +21,7 @@ actor {
 
   // ========== User Profile ==========
 
-  type UserProfile = {
+  public type UserProfile = {
     name : Text;
   };
 
@@ -52,13 +50,13 @@ actor {
 
   // ========== Machines ==========
 
-  type MachinePart = {
+  public type MachinePart = {
     #coolantFiltrationUnit;
     #mistUnit;
     #chillerUnit;
   };
 
-  type Machine = {
+  public type Machine = {
     id : Text;
     name : Text;
     lastCleaningDone : Time.Time;
@@ -67,17 +65,15 @@ actor {
     machinePart : MachinePart;
   };
 
-  module Machine {
-    public func compare(m1 : Machine, m2 : Machine) : Order.Order {
-      switch (Text.compare(m1.name, m2.name)) {
-        case (#equal) {
-          switch (Int.compare(m1.lastCleaningDone, m2.lastCleaningDone)) {
-            case (#equal) { Int.compare(m1.nextDue, m2.nextDue) };
-            case (order) { order };
-          };
+  func compareMachines(m1 : Machine, m2 : Machine) : Order.Order {
+    switch (Text.compare(m1.name, m2.name)) {
+      case (#equal) {
+        switch (Int.compare(m1.lastCleaningDone, m2.lastCleaningDone)) {
+          case (#equal) { Int.compare(m1.nextDue, m2.nextDue) };
+          case (order) { order };
         };
-        case (order) { order };
       };
+      case (order) { order };
     };
   };
 
@@ -122,7 +118,7 @@ actor {
     switch (machines.get(id)) {
       case (null) { Runtime.trap("Machine not found") };
       case (?machine) {
-        let updatedMachine = {
+        let updatedMachine : Machine = {
           id = machine.id;
           name = switch (name) { case (null) { machine.name }; case (?n) { n } };
           lastCleaningDone = switch (lastCleaningDone) {
@@ -147,8 +143,8 @@ actor {
   };
 
   public query ({ caller }) func getAllMachines() : async [Machine] {
-    let machineArray = machines.values().toArray();
-    machineArray.sort();
+    let machineArray = Array.fromIter(machines.values());
+    machineArray.sort(compareMachines);
   };
 
   public query ({ caller }) func getMachine(id : Text) : async Machine {
@@ -159,61 +155,62 @@ actor {
   };
 
   public query ({ caller }) func getMachinesByName(name : Text) : async [Machine] {
-    machines.values().toArray().filter(
-      func(machine) {
+    let all = Array.fromIter(machines.values());
+    all.filter(
+      func(machine : Machine) : Bool {
         machine.name.contains(#text name);
-      }
+      },
     );
   };
 
   // ========== Audit Log ==========
 
-  type LogEntry = {
+  public type LogEntry = {
     timestamp : Time.Time;
     userId : Blob;
     eventType : Text;
   };
 
-  let auditLogs = List.empty<LogEntry>();
+  var auditLogs : [LogEntry] = [];
 
   public shared ({ caller }) func logEvent(userId : [Nat8], eventType : Text) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can log events");
+      Runtime.trap("Unauthorized: Only admins can write audit log entries");
     };
     let logEntry : LogEntry = {
       timestamp = Time.now();
       userId = Blob.fromArray(userId);
       eventType;
     };
-    auditLogs.add(logEntry);
+    auditLogs := auditLogs.concat([logEntry]);
   };
 
   public query ({ caller }) func getAuditLogs() : async [LogEntry] {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can view audit logs");
     };
-    auditLogs.toArray();
+    auditLogs;
   };
 
   // ========== Contacts ==========
 
-  type Contact = {
+  public type Contact = {
     fullName : Text;
     phone : Text;
     email : Text;
   };
 
-  let contacts = List.empty<Contact>();
+  var contacts : [Contact] = [];
 
   public shared ({ caller }) func saveContact(fullName : Text, phone : Text, email : Text) : async () {
     // any caller including guests may submit contact details
-    contacts.add({ fullName; phone; email });
+    contacts := contacts.concat([{ fullName; phone; email }]);
   };
 
   public query ({ caller }) func getAllContacts() : async [Contact] {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can view all contacts");
     };
-    contacts.toArray();
+    contacts;
   };
 };

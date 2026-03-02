@@ -75,7 +75,7 @@ export function AddMachineModal({ open, onOpenChange }: AddMachineModalProps) {
                         Add New Machine
                     </DialogTitle>
                     <DialogDescription>
-                        Register a machine with its details, last replaced date and next scheduled due date.
+                        Register a machine with its details, last cleaned date and next scheduled due date.
                     </DialogDescription>
                 </DialogHeader>
 

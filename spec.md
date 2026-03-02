@@ -1,14 +1,16 @@
 # Specification
 
 ## Summary
-**Goal:** After login, redirect the user to a new "Add Contact Details" screen before reaching the Dashboard, display their name at the top, and allow them to save or skip contact details.
+**Goal:** Fix all broken backend, frontend, authentication, and date utility issues in the Machine Cleaning Tracker app.
 
 **Planned changes:**
-- After successful login, navigate to a new "Add Contact Details" screen instead of the Dashboard
-- Display the logged-in user's name prominently at the top of the Add Contact Details screen
-- Add a form with fields for full name, phone number, and email address, with basic validation
-- Include a "Save" button (submits details, then navigates to Dashboard) and a "Skip" button (navigates directly to Dashboard)
-- Add backend methods to save and retrieve contact details (full name, phone, email) associated with a user principal, persisted across upgrades
-- Skip the contact details screen on subsequent logins if details have already been saved
+- Fix all compile errors and broken logic in `backend/main.mo`, including role-based access control, machine CRUD operations, and user profile management
+- Fix all broken React Query hooks in `useQueries.ts`, including data fetching, mutations, and cache invalidation
+- Fix broken modal dialogs: `AddMachineModal`, `EditMachineModal`, `DeleteConfirmDialog`, and `RescheduleDateModal`
+- Fix malfunctioning alert banners: `DueTodayAlertBanner` and `OverdueAlertBanner`
+- Fix rendering errors and broken interactions in `Dashboard.tsx` and `AddContactDetailsPage.tsx`
+- Fix authentication and onboarding flow so new users are directed to `AddContactDetailsPage` and returning users to `Dashboard` after login
+- Fix logout to properly reset per-principal localStorage state and ensure reliable identity change detection in `App.tsx`
+- Fix date utilities in `dateUtils.ts`: correct IC nanosecond timestamp conversion, machine cleaning status computation (ok, due-soon, due-today, overdue), and next-due-date calculation
 
-**User-visible outcome:** After logging in, users are taken to an "Add Contact Details" screen showing their name, where they can fill in and save their contact info or skip to go straight to the Dashboard.
+**User-visible outcome:** The app works correctly end-to-end — users can log in, complete onboarding, manage machines, and see accurate cleaning statuses and alerts without errors.

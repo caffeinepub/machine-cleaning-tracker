@@ -25,7 +25,7 @@ export function StatsBar({ machines }: StatsBarProps) {
             bg: 'bg-due-today/10',
             pulse: dueToday > 0,
         },
-        { label: 'Part Overdue', value: overdue, icon: XCircle, color: 'text-status-danger', bg: 'bg-status-danger/10' },
+        { label: 'Cleaning Overdue', value: overdue, icon: XCircle, color: 'text-status-danger', bg: 'bg-status-danger/10' },
     ];
 
     return (

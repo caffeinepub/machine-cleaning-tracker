@@ -1,43 +1,16 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 3,
-  "summary": "App with login flow (forgot password, phone number login) that opens a new 'Add Contact Details' tab after successful login, displaying the user's name at the top.",
-  "architectural_notes": [
-    "Login flow includes forgot password and phone number-only login options",
-    "Post-login navigation leads to an 'Add Contact Details' screen/tab"
-  ],
+  "projectStateVersion": 9,
+  "summary": "Machine Cleaning Tracker app - fix all problems requested",
+  "architectural_notes": [],
   "known_issues": [],
-  "isFixRequest": false,
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-after-a-successful-login-automatically-navigate-the-user-to-a-new-add-contact-details-screen-tab-instead-of-landing-directly-on-the-dashboard",
-      "title": "After a successful login, automatically navigate the user to a new 'Add Contact Details' screen/tab instead of landing directly on the Dashboard.",
+      "id": "feature-replace-all-instances-of-the-text-machine-part-with-machine-cleaning-throughout-the-entire-application-including-ui-labels-titles-headings-button-text-placeholder-text-select-option-labels-alert-banners-modal-titles-stats-bar-labels-and-any-other-user-facing-text-in-all-frontend-components-and-pages",
+      "title": "Replace all instances of the text 'Machine Part' with 'Machine Cleaning' throughout the entire application — including UI labels, titles, headings, button text, placeholder text, select option labels, alert banners, modal titles, stats bar labels, and any other user-facing text in all frontend components and pages.",
       "reqIds": [
-        "REQ-1"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-on-the-add-contact-details-screen-display-the-logged-in-user-s-name-prominently-at-the-top-of-the-page",
-      "title": "On the 'Add Contact Details' screen, display the logged-in user's name prominently at the top of the page.",
-      "reqIds": [
-        "REQ-2"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-create-an-add-contact-details-form-screen-with-fields-for-the-user-to-enter-their-contact-information-full-name-phone-number-email-address-include-a-save-button-to-submit-and-a-skip-button-to-proceed-to-the-dashboard-without-saving",
-      "title": "Create an 'Add Contact Details' form screen with fields for the user to enter their contact information (full name, phone number, email address). Include a 'Save' button to submit and a 'Skip' button to proceed to the Dashboard without saving.",
-      "reqIds": [
-        "REQ-3"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-after-saving-or-skipping-the-contact-details-step-navigate-the-user-to-the-main-dashboard",
-      "title": "After saving or skipping the contact details step, navigate the user to the main Dashboard.",
-      "reqIds": [
-        "REQ-5"
+        "REQ-9"
       ],
       "version": 1
     }
@@ -45,21 +18,109 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "After login, open a new tab/screen for adding contact details, with user's name shown at the top",
-      "reqIds": [],
+      "summary": "Audit and fix all broken or non-functional backend Motoko logic in backend/main.mo, including any compile errors, incorrect access control logic, broken CRUD operations for machines, and any issues with user profile management or admin/user role handling.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Audit and fix all frontend issues across all pages and components, including broken React Query hooks in useQueries.ts, incorrect data fetching or mutation logic, broken modal dialogs (AddMachineModal, EditMachineModal, DeleteConfirmDialog, RescheduleDateModal), malfunctioning alert banners (DueTodayAlertBanner, OverdueAlertBanner), and any rendering errors or broken UI interactions in Dashboard.tsx and AddContactDetailsPage.tsx.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Fix all issues in the app's authentication and onboarding flow: ensure Internet Identity login correctly triggers the AddContactDetailsPage for new users and the Dashboard for returning users, and that logout properly resets the per-principal localStorage state.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Fix all issues with date utilities in frontend/src/utils/dateUtils.ts, including correct conversion between IC nanosecond timestamps and JavaScript Dates, accurate machine cleaning status computation (ok, due-soon, due-today, overdue), and correct next-due-date calculation logic.",
+      "reqIds": [
+        "REQ-4"
+      ],
       "status": "pending"
     },
     {
       "id": "AR-5",
-      "summary": "Store submitted contact details (full name, phone number, email) in the backend so they can be retrieved later.",
+      "summary": "Audit and fix all broken or non-functional backend Motoko logic in backend/main.mo, including any compile errors, incorrect access control logic, broken CRUD operations for machines, and any issues with user profile management or admin/user role handling.",
       "reqIds": [
-        "REQ-4"
+        "REQ-5"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Audit and fix all frontend issues across all pages and components, including broken React Query hooks in useQueries.ts, incorrect data fetching or mutation logic, broken modal dialogs (AddMachineModal, EditMachineModal, DeleteConfirmDialog, RescheduleDateModal), malfunctioning alert banners (DueTodayAlertBanner, OverdueAlertBanner), and any rendering errors or broken UI interactions in Dashboard.tsx and AddContactDetailsPage.tsx.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Fix all issues in the app's authentication and onboarding flow: ensure Internet Identity login correctly triggers AddContactDetailsPage for new users and the Dashboard for returning users, and that logout properly resets per-principal localStorage state.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Fix all issues with date utilities in frontend/src/utils/dateUtils.ts, including correct conversion between IC nanosecond timestamps and JavaScript Dates, accurate machine cleaning status computation (ok, due-soon, due-today, overdue), and correct next-due-date calculation logic.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Replace all instances of 'Machine Part' with 'Machine Cleaning' throughout the app (UI labels, titles, headings, and any relevant text).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Audit and fix all broken or non-functional backend Motoko logic in backend/main.mo, including any compile errors, incorrect access control logic, broken CRUD operations for machines, and any issues with user profile management or admin/user role handling.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Audit and fix all frontend issues across all pages and components, including broken React Query hooks in useQueries.ts, incorrect data fetching or mutation logic, broken modal dialogs (AddMachineModal, EditMachineModal, DeleteConfirmDialog, RescheduleDateModal), malfunctioning alert banners (DueTodayAlertBanner, OverdueAlertBanner), and any rendering errors or broken UI interactions in Dashboard.tsx and AddContactDetailsPage.tsx.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Fix all issues in the app's authentication and onboarding flow: ensure Internet Identity login correctly triggers the AddContactDetailsPage for new users and the Dashboard for returning users, and that logout properly resets the per-principal localStorage state.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Fix all issues with date utilities in frontend/src/utils/dateUtils.ts, including correct conversion between IC nanosecond timestamps and JavaScript Dates, accurate machine cleaning status computation (ok, due-soon, due-today, overdue), and correct next-due-date calculation logic.",
+      "reqIds": [
+        "REQ-13"
       ],
       "status": "pending"
     }
   ],
   "gameProjectType": "none",
-  "projectName": "Machine Part Tracker",
+  "projectName": "Machine Cleaning Tracker",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

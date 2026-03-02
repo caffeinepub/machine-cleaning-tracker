@@ -1,107 +1,96 @@
 {
   "kind": "build_request",
-  "title": "Add Contact Details tab after login with user name display",
-  "projectName": "Machine Part Tracker",
-  "priority": "normal",
+  "title": "Fix all broken backend, frontend, auth, and date utility issues",
+  "projectName": "Machine Cleaning Tracker",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "After a successful login, automatically navigate the user to a new 'Add Contact Details' screen/tab instead of landing directly on the Dashboard.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-7"
-        ],
-        "quotes": [
-          "after logging open new tab like add contact deatail"
-        ]
-      },
-      "acceptanceCriteria": [
-        "After a successful phone number login, the app transitions to an 'Add Contact Details' screen.",
-        "The Dashboard is not shown until the user completes or skips the contact details step.",
-        "The contact details screen is visually distinct (e.g., a full-page card or tab-style layout)."
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "text": "On the 'Add Contact Details' screen, display the logged-in user's name prominently at the top of the page.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-5"
-        ],
-        "quotes": [
-          "after logging Name Showinh on top"
-        ]
-      },
-      "acceptanceCriteria": [
-        "The user's name is displayed at the top of the Add Contact Details screen after login.",
-        "The name text is clearly readable and styled consistently with the app's design."
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "Create an 'Add Contact Details' form screen with fields for the user to enter their contact information (full name, phone number, email address). Include a 'Save' button to submit and a 'Skip' button to proceed to the Dashboard without saving.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-7"
-        ],
-        "quotes": [
-          "after logging open new tab like add contact deatail"
-        ]
-      },
-      "acceptanceCriteria": [
-        "The form includes fields for full name, phone number, and email address.",
-        "A 'Save' button submits the contact details and then navigates to the Dashboard.",
-        "A 'Skip' button allows the user to bypass this step and go directly to the Dashboard.",
-        "Basic validation is applied: phone number format and email format are checked before saving."
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Store submitted contact details (full name, phone number, email) in the backend so they can be retrieved later.",
+      "id": "REQ-10",
+      "text": "Audit and fix all broken or non-functional backend Motoko logic in backend/main.mo, including any compile errors, incorrect access control logic, broken CRUD operations for machines, and any issues with user profile management or admin/user role handling.",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-7"
+          "msg-1"
         ],
         "quotes": [
-          "after logging open new tab like add contact deatail"
+          "fix the problrm"
         ]
       },
       "acceptanceCriteria": [
-        "The backend actor has a method to save contact details associated with a user principal.",
-        "The backend actor has a method to retrieve contact details for a given principal.",
-        "Contact details persist across canister upgrades."
+        "backend/main.mo compiles without errors",
+        "Admin and user role-based access control works correctly",
+        "Machine CRUD operations (create, read, update, delete) all function correctly",
+        "User profile management operations work without errors"
       ]
     },
     {
-      "id": "REQ-5",
-      "text": "After saving or skipping the contact details step, navigate the user to the main Dashboard.",
+      "id": "REQ-11",
+      "text": "Audit and fix all frontend issues across all pages and components, including broken React Query hooks in useQueries.ts, incorrect data fetching or mutation logic, broken modal dialogs (AddMachineModal, EditMachineModal, DeleteConfirmDialog, RescheduleDateModal), malfunctioning alert banners (DueTodayAlertBanner, OverdueAlertBanner), and any rendering errors or broken UI interactions in Dashboard.tsx and AddContactDetailsPage.tsx.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-7"
+          "msg-1"
+        ],
+        "quotes": [
+          "fix the problrm"
         ]
       },
       "acceptanceCriteria": [
-        "Clicking 'Save' on the contact details form navigates to the Dashboard after successful submission.",
-        "Clicking 'Skip' immediately navigates to the Dashboard.",
-        "The contact details screen does not reappear on subsequent logins if details have already been saved."
+        "All React Query hooks in useQueries.ts fetch and mutate data correctly with proper cache invalidation",
+        "AddMachineModal and EditMachineModal open, validate, and submit correctly",
+        "DeleteConfirmDialog and RescheduleDateModal function without errors",
+        "DueTodayAlertBanner and OverdueAlertBanner display correct machines and dismiss properly",
+        "Dashboard.tsx renders without errors and all interactions work",
+        "AddContactDetailsPage.tsx renders and submits correctly"
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "text": "Fix all issues in the app's authentication and onboarding flow: ensure Internet Identity login correctly triggers the AddContactDetailsPage for new users and the Dashboard for returning users, and that logout properly resets the per-principal localStorage state.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "fix the problrm"
+        ]
+      },
+      "acceptanceCriteria": [
+        "New users are directed to AddContactDetailsPage after logging in via Internet Identity",
+        "Returning users with completed onboarding are directed to Dashboard after login",
+        "Logout clears per-principal localStorage state correctly",
+        "Identity change detection in App.tsx works reliably"
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "text": "Fix all issues with date utilities in frontend/src/utils/dateUtils.ts, including correct conversion between IC nanosecond timestamps and JavaScript Dates, accurate machine cleaning status computation (ok, due-soon, due-today, overdue), and correct next-due-date calculation logic.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "fix the problrm"
+        ]
+      },
+      "acceptanceCriteria": [
+        "IC nanosecond timestamps are correctly converted to and from JavaScript Date objects",
+        "Machine cleaning status (ok, due-soon, due-today, overdue) is computed accurately based on next-due date",
+        "Next-due-date calculation produces correct results",
+        "StatsBar and StatusBadge reflect correct statuses derived from dateUtils"
       ]
     }
   ],
   "constraints": [
-    "Do not modify files under frontend/src/hooks/ (useInternetIdentity.ts, useActor.ts) or frontend/src/main.tsx.",
-    "Do not modify files under frontend/src/components/ui/.",
-    "All Motoko logic must remain in backend/main.mo as a single actor."
+    "Do not modify files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui",
+    "All Motoko logic must remain in the single backend/main.mo actor file"
   ],
   "nonGoals": [
-    "Social login or third-party identity providers.",
-    "Email or SMS verification of contact details.",
-    "Contact details editing after the initial save (not requested).",
-    "Changes to the existing machine CRUD or audit log features."
+    "Adding new features beyond fixing existing broken functionality",
+    "Changing the overall app design or color scheme",
+    "Renaming any further text beyond what was already completed in the 'Machine Part' to 'Machine Cleaning' feature"
   ],
   "imageRequirements": {
     "required": [],

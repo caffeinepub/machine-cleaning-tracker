@@ -62,14 +62,14 @@ export function MachineFormFields({ data, onChange, error }: MachineFormFieldsPr
 
             <div className="space-y-1.5">
                 <Label htmlFor="machine-part" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    Machine Part
+                    Machine Cleaning
                 </Label>
                 <Select
                     value={data.machinePart}
                     onValueChange={(val) => onChange({ ...data, machinePart: val as MachinePart })}
                 >
                     <SelectTrigger id="machine-part" className="font-medium">
-                        <SelectValue placeholder="Select a machine part…" />
+                        <SelectValue placeholder="Select a machine cleaning…" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value={MachinePart.coolantFiltrationUnit}>
@@ -87,7 +87,7 @@ export function MachineFormFields({ data, onChange, error }: MachineFormFieldsPr
 
             <div className="space-y-1.5">
                 <Label htmlFor="last-replaced" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    Last Replaced Date
+                    Last Cleaned Date
                 </Label>
                 <Input
                     id="last-replaced"
@@ -123,9 +123,9 @@ export function MachineFormFields({ data, onChange, error }: MachineFormFieldsPr
 
 export function validateMachineForm(data: MachineFormData): string | null {
     if (!data.name.trim()) return 'Machine name is required.';
-    if (!data.machinePart) return 'Machine part is required.';
-    if (!data.lastCleaningDone) return 'Last replaced date is required.';
+    if (!data.machinePart) return 'Machine cleaning is required.';
+    if (!data.lastCleaningDone) return 'Last cleaned date is required.';
     if (!data.nextDue) return 'Next due date is required.';
-    if (data.nextDue < data.lastCleaningDone) return 'Next due date cannot be before the last replaced date.';
+    if (data.nextDue < data.lastCleaningDone) return 'Next due date cannot be before the last cleaned date.';
     return null;
 }

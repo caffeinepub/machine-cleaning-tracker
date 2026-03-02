@@ -25,8 +25,8 @@ export function DueTodayAlertBanner({ machines }: DueTodayAlertBannerProps) {
                     <p className="font-bold text-sm uppercase tracking-widest mb-1 flex items-center gap-2">
                         <span className="inline-block w-2 h-2 rounded-full bg-white animate-pulse" />
                         {machines.length === 1
-                            ? '⚠ URGENT: 1 Machine Part Due Within 24 Hours!'
-                            : `⚠ URGENT: ${machines.length} Machine Parts Due Within 24 Hours!`}
+                            ? '⚠ URGENT: 1 Machine Cleaning Due Within 24 Hours!'
+                            : `⚠ URGENT: ${machines.length} Machine Cleanings Due Within 24 Hours!`}
                     </p>
                     <div className="flex flex-wrap gap-2 mt-1">
                         {machines.map((m) => (
@@ -42,7 +42,7 @@ export function DueTodayAlertBanner({ machines }: DueTodayAlertBannerProps) {
                         ))}
                     </div>
                     <p className="text-xs mt-1.5 opacity-80 font-medium">
-                        Immediate attention required — replace the machine part today.
+                        Immediate attention required — perform machine cleaning today.
                     </p>
                 </div>
                 <button

@@ -1,16 +1,25 @@
-# Specification
+# Machine Cleaning Tracker
 
-## Summary
-**Goal:** Fix all broken backend, frontend, authentication, and date utility issues in the Machine Cleaning Tracker app.
+## Current State
+- Dashboard shows machine cleaning records with due dates
+- In-app flashing alert banners for overdue and due-today machines
+- Stats bar, machine cards with status badges
+- Add/edit/delete machines with machine no. and cleaning tool type
 
-**Planned changes:**
-- Fix all compile errors and broken logic in `backend/main.mo`, including role-based access control, machine CRUD operations, and user profile management
-- Fix all broken React Query hooks in `useQueries.ts`, including data fetching, mutations, and cache invalidation
-- Fix broken modal dialogs: `AddMachineModal`, `EditMachineModal`, `DeleteConfirmDialog`, and `RescheduleDateModal`
-- Fix malfunctioning alert banners: `DueTodayAlertBanner` and `OverdueAlertBanner`
-- Fix rendering errors and broken interactions in `Dashboard.tsx` and `AddContactDetailsPage.tsx`
-- Fix authentication and onboarding flow so new users are directed to `AddContactDetailsPage` and returning users to `Dashboard` after login
-- Fix logout to properly reset per-principal localStorage state and ensure reliable identity change detection in `App.tsx`
-- Fix date utilities in `dateUtils.ts`: correct IC nanosecond timestamp conversion, machine cleaning status computation (ok, due-soon, due-today, overdue), and next-due-date calculation
+## Requested Changes (Diff)
 
-**User-visible outcome:** The app works correctly end-to-end — users can log in, complete onboarding, manage machines, and see accurate cleaning statuses and alerts without errors.
+### Add
+- Browser-based push notifications using the Web Notifications API
+- A custom React hook `useBrowserNotifications` that:
+  - Requests notification permission on first load
+  - Checks all machines for due-today (within 24h) or overdue status
+  - Fires a browser notification for each machine that is due within 1 day or overdue
+  - Tracks which notifications have already been shown (using localStorage by machine id + due date) to avoid repeat notifications on the same session
+  - Re-checks whenever the machines list refreshes
+- A notification permission prompt UI (small banner) if permission is not yet granted
+
+### Modify
+- Dashboard.tsx: integrate `useBrowserNotifications` hook, pass machines data to it
+
+### Remove
+- Nothing removed

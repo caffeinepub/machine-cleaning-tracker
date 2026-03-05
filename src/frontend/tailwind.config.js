@@ -16,8 +16,8 @@ export default {
         },
         extend: {
             fontFamily: {
-                sans: ['system-ui', 'Segoe UI', 'Arial', 'sans-serif'],
-                condensed: ['system-ui', 'Segoe UI', 'Arial Narrow', 'Arial', 'sans-serif'],
+                sans: ['Barlow', 'system-ui', 'sans-serif'],
+                condensed: ['Barlow Condensed', 'system-ui', 'sans-serif'],
             },
             colors: {
                 border: 'oklch(var(--border))',

@@ -12,7 +12,7 @@ export function DueTodayAlertBanner({ machines }: DueTodayAlertBannerProps) {
   if (machines.length === 0 || dismissed) return null;
 
   return (
-    <div className="relative flex items-start gap-3 rounded-lg px-4 py-3 text-white overflow-hidden">
+    <div className="relative flex items-start gap-3 rounded-lg px-4 py-3 text-white animate-flash-banner due-today-banner overflow-hidden">
       {/* Animated background overlay for flash effect */}
       <div className="absolute inset-0 bg-due-today animate-flash-bg pointer-events-none rounded-lg" />
 

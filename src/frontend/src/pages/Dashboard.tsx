@@ -99,29 +99,14 @@ export function Dashboard() {
               </Button>
             )}
 
-            {isAuthenticated ? (
-              <Button
-                size="sm"
-                className="gap-1.5 font-semibold"
-                onClick={() => setAddOpen(true)}
-                data-ocid="machine.open_modal_button"
-              >
-                <Plus className="w-4 h-4" />
-                Add Machine
-              </Button>
-            ) : (
-              <Button
-                size="sm"
-                variant="outline"
-                className="gap-1.5 font-semibold"
-                onClick={login}
-                disabled={isLoggingIn}
-                data-ocid="machine.primary_button"
-              >
-                <LogIn className="w-4 h-4" />
-                Login to Add Machine
-              </Button>
-            )}
+            <Button
+              size="sm"
+              className="gap-1.5 font-semibold"
+              onClick={() => setAddOpen(true)}
+            >
+              <Plus className="w-4 h-4" />
+              Add Machine
+            </Button>
           </div>
         </div>
       </header>
@@ -181,27 +166,13 @@ export function Dashboard() {
               Add your first machine to start tracking cleaning schedules and
               due dates.
             </p>
-            {isAuthenticated ? (
-              <Button
-                className="gap-1.5 font-semibold mt-2"
-                onClick={() => setAddOpen(true)}
-                data-ocid="machine.secondary_button"
-              >
-                <Plus className="w-4 h-4" />
-                Add First Machine
-              </Button>
-            ) : (
-              <Button
-                variant="outline"
-                className="gap-1.5 font-semibold mt-2"
-                onClick={login}
-                disabled={isLoggingIn}
-                data-ocid="machine.secondary_button"
-              >
-                <LogIn className="w-4 h-4" />
-                Login to Add Machines
-              </Button>
-            )}
+            <Button
+              className="gap-1.5 font-semibold mt-2"
+              onClick={() => setAddOpen(true)}
+            >
+              <Plus className="w-4 h-4" />
+              Add First Machine
+            </Button>
           </div>
         )}
 

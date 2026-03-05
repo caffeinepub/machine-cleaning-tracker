@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&family=Barlow+Condensed:wght@600;700;800&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -99,7 +101,7 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: "system-ui", "Segoe UI", "Arial", sans-serif;
+    font-family: "Barlow", sans-serif;
   }
 
   h1,
@@ -108,7 +110,7 @@
   h4,
   h5,
   h6 {
-    font-family: "system-ui", "Segoe UI", "Arial Narrow", "Arial", sans-serif;
+    font-family: "Barlow Condensed", sans-serif;
     font-weight: 700;
     letter-spacing: 0.02em;
   }
@@ -133,16 +135,6 @@
   /* Flashing background for the due-today alert banner */
   .animate-flash-bg {
     animation: flash-bg 1.6s ease-in-out infinite;
-  }
-
-  /* Alias for animate-flash-banner (same as animate-flash-bg) */
-  .animate-flash-banner {
-    animation: flash-bg 1.6s ease-in-out infinite;
-  }
-
-  /* Due today solid background helper */
-  .bg-due-today {
-    background-color: oklch(0.38 0.18 22);
   }
 }
 

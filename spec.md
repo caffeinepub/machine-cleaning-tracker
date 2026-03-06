@@ -1,25 +1,26 @@
 # Machine Cleaning Tracker
 
 ## Current State
-- Dashboard shows machine cleaning records with due dates
-- In-app flashing alert banners for overdue and due-today machines
-- Stats bar, machine cards with status badges
-- Add/edit/delete machines with machine no. and cleaning tool type
+The app tracks machine cleaning schedules with multiple machines, each having a name, machine number, machine part type (Coolant Filtration Unit, Mist Unit, Chiller Unit), last cleaned date, and next due date. The frontend shows a dashboard with machine cards, status badges, alert banners for overdue/due-today machines, and modals for adding/editing/rescheduling machines. Internet Identity is used for login.
+
+The **root bug**: `addMachine`, `updateMachine`, and `deleteMachine` backend functions require `#admin` role. New users who log in via Internet Identity are assigned `#user` role (not `#admin`) unless they use an admin token. This causes all add/update/delete operations to fail with "Unauthorized" for regular users.
 
 ## Requested Changes (Diff)
 
 ### Add
-- Browser-based push notifications using the Web Notifications API
-- A custom React hook `useBrowserNotifications` that:
-  - Requests notification permission on first load
-  - Checks all machines for due-today (within 24h) or overdue status
-  - Fires a browser notification for each machine that is due within 1 day or overdue
-  - Tracks which notifications have already been shown (using localStorage by machine id + due date) to avoid repeat notifications on the same session
-  - Re-checks whenever the machines list refreshes
-- A notification permission prompt UI (small banner) if permission is not yet granted
+- Nothing new to add.
 
 ### Modify
-- Dashboard.tsx: integrate `useBrowserNotifications` hook, pass machines data to it
+- **Backend authorization**: Change `addMachine`, `updateMachine`, `deleteMachine` to require `#user` permission instead of `#admin`. Any authenticated (non-anonymous) user should be able to manage machines.
+- **Backend authorization**: Change `logEvent` and `getAuditLogs` to require `#user` permission instead of `#admin`.
+- Keep `getAllContacts` and `saveContact` as-is.
+- Keep all other functionality unchanged.
 
 ### Remove
-- Nothing removed
+- Nothing to remove.
+
+## Implementation Plan
+1. Regenerate Motoko backend with machine CRUD operations open to `#user` role (not just `#admin`).
+2. Keep all existing data types: Machine, MachinePart (coolantFiltrationUnit, mistUnit, chillerUnit), LogEntry, Contact, UserProfile.
+3. Keep the same function signatures so the frontend requires no changes.
+4. Keep admin-only for: `getAllContacts`, `assignCallerUserRole`.

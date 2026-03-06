@@ -5,10 +5,8 @@ import { useState } from "react";
 import { AddMachineModal } from "../components/AddMachineModal";
 import { DueTodayAlertBanner } from "../components/DueTodayAlertBanner";
 import { MachineCard } from "../components/MachineCard";
-import { NotificationPermissionBanner } from "../components/NotificationPermissionBanner";
 import { OverdueAlertBanner } from "../components/OverdueAlertBanner";
 import { StatsBar } from "../components/StatsBar";
-import { useBrowserNotifications } from "../hooks/useBrowserNotifications";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
 import { useGetAllMachines } from "../hooks/useQueries";
 import { getMachineStatus } from "../utils/dateUtils";
@@ -29,13 +27,6 @@ export function Dashboard() {
   );
 
   const isAuthenticated = !!identity;
-
-  // Browser notifications hook — fires OS-level alerts for overdue/due-today machines
-  useBrowserNotifications(machines);
-
-  const showNotificationBanner =
-    typeof Notification !== "undefined" &&
-    Notification.permission === "default";
 
   const handleLogout = () => {
     clear();
@@ -112,9 +103,6 @@ export function Dashboard() {
       </header>
 
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 py-6 space-y-5">
-        {/* Browser Notification Permission Banner */}
-        {showNotificationBanner && <NotificationPermissionBanner />}
-
         {/* Due Today Alert Banner — shown above overdue banner */}
         {!isLoading && <DueTodayAlertBanner machines={dueTodayMachines} />}
 
@@ -127,9 +115,9 @@ export function Dashboard() {
         {/* Loading State */}
         {isLoading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {["sk-1", "sk-2", "sk-3"].map((sk) => (
+            {["skeleton-1", "skeleton-2", "skeleton-3"].map((key) => (
               <div
-                key={sk}
+                key={key}
                 className="rounded-lg border border-border p-4 space-y-3"
               >
                 <Skeleton className="h-5 w-2/3" />

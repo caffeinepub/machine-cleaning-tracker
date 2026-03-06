@@ -25,8 +25,8 @@ export function SessionLogsPanel() {
       <CardContent className="pt-0">
         {isLoading && (
           <div className="space-y-2">
-            {["sk-1", "sk-2", "sk-3"].map((sk) => (
-              <div key={sk} className="flex items-center gap-3 py-2">
+            {["skeleton-1", "skeleton-2", "skeleton-3"].map((key) => (
+              <div key={key} className="flex items-center gap-3 py-2">
                 <Skeleton className="h-6 w-16 rounded-full" />
                 <Skeleton className="h-4 w-32" />
                 <Skeleton className="h-4 w-40 ml-auto" />
@@ -46,8 +46,7 @@ export function SessionLogsPanel() {
             <div className="space-y-1">
               {[...logs].reverse().map((entry, idx) => (
                 <div
-                  // biome-ignore lint/suspicious/noArrayIndexKey: reversed log list — index is stable for display
-                  key={idx}
+                  key={`${entry.eventType}-${entry.timestamp.toString()}-${idx}`}
                   className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-muted/50 transition-colors text-sm"
                 >
                   {entry.eventType === "login" ? (

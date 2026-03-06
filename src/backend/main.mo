@@ -10,9 +10,9 @@ import Blob "mo:core/Blob";
 import MixinStorage "blob-storage/Mixin";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
+import Migration "migration";
 
-
-
+(with migration = Migration.run)
 actor {
   include MixinStorage();
 
@@ -87,8 +87,8 @@ actor {
     machineNo : ?Text,
     machinePart : MachinePart,
   ) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can add machines");
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can add machines");
     };
     if (machines.containsKey(id)) {
       Runtime.trap("Machine with this ID already exists");
@@ -112,8 +112,8 @@ actor {
     machineNo : ?Text,
     machinePart : ?MachinePart,
   ) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can update machines");
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can update machines");
     };
     switch (machines.get(id)) {
       case (null) { Runtime.trap("Machine not found") };
@@ -135,19 +135,25 @@ actor {
   };
 
   public shared ({ caller }) func deleteMachine(id : Text) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can delete machines");
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can delete machines");
     };
     if (not machines.containsKey(id)) { Runtime.trap("Machine not found") };
     machines.remove(id);
   };
 
   public query ({ caller }) func getAllMachines() : async [Machine] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view machines");
+    };
     let machineArray = Array.fromIter(machines.values());
     machineArray.sort(compareMachines);
   };
 
   public query ({ caller }) func getMachine(id : Text) : async Machine {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view machines");
+    };
     switch (machines.get(id)) {
       case (null) { Runtime.trap("Machine not found") };
       case (?machine) { machine };
@@ -155,6 +161,9 @@ actor {
   };
 
   public query ({ caller }) func getMachinesByName(name : Text) : async [Machine] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view machines");
+    };
     let all = Array.fromIter(machines.values());
     all.filter(
       func(machine : Machine) : Bool {
@@ -174,8 +183,8 @@ actor {
   var auditLogs : [LogEntry] = [];
 
   public shared ({ caller }) func logEvent(userId : [Nat8], eventType : Text) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can write audit log entries");
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can write audit log entries");
     };
     let logEntry : LogEntry = {
       timestamp = Time.now();
@@ -186,8 +195,8 @@ actor {
   };
 
   public query ({ caller }) func getAuditLogs() : async [LogEntry] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can view audit logs");
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view audit logs");
     };
     auditLogs;
   };

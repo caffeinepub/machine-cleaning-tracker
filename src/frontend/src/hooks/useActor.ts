@@ -55,5 +55,6 @@ export function useActor() {
   return {
     actor: actorQuery.data || null,
     isFetching: actorQuery.isFetching,
+    isActorReady: !actorQuery.isFetching && !!actorQuery.data,
   };
 }

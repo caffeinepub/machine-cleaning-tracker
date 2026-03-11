@@ -53,7 +53,8 @@ export function AddMachineModal({ open, onOpenChange }: AddMachineModalProps) {
       });
       setForm(emptyForm);
       onOpenChange(false);
-    } catch {
+    } catch (err) {
+      console.error("Add machine error:", err);
       setFormError("Failed to add machine. Please try again.");
     }
   };
@@ -94,6 +95,7 @@ export function AddMachineModal({ open, onOpenChange }: AddMachineModalProps) {
             variant="outline"
             onClick={() => handleOpenChange(false)}
             disabled={addMachine.isPending}
+            data-ocid="machine.cancel_button"
           >
             Cancel
           </Button>
@@ -101,6 +103,7 @@ export function AddMachineModal({ open, onOpenChange }: AddMachineModalProps) {
             onClick={handleSubmit}
             disabled={addMachine.isPending}
             className="gap-2"
+            data-ocid="machine.submit_button"
           >
             {addMachine.isPending && (
               <Loader2 className="w-4 h-4 animate-spin" />

@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { LogIn, LogOut, Plus, RefreshCw, Wrench } from "lucide-react";
+import { Loader2, LogIn, Plus, RefreshCw, Wrench } from "lucide-react";
 import { useState } from "react";
 import { AddMachineModal } from "../components/AddMachineModal";
 import { DueTodayAlertBanner } from "../components/DueTodayAlertBanner";
 import { MachineCard } from "../components/MachineCard";
 import { OverdueAlertBanner } from "../components/OverdueAlertBanner";
 import { StatsBar } from "../components/StatsBar";
+import { useActor } from "../hooks/useActor";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
 import { useGetAllMachines } from "../hooks/useQueries";
 import { getMachineStatus } from "../utils/dateUtils";
@@ -20,17 +21,15 @@ export function Dashboard() {
     refetch,
     isFetching,
   } = useGetAllMachines();
-  const { identity, login, clear, isLoggingIn } = useInternetIdentity();
+  const { identity, login, isLoggingIn } = useInternetIdentity();
+  const { actor, isFetching: isActorFetching } = useActor();
 
   const dueTodayMachines = machines.filter(
     (m) => getMachineStatus(m.nextDue) === "due-today",
   );
 
   const isAuthenticated = !!identity;
-
-  const handleLogout = () => {
-    clear();
-  };
+  const isActorReady = isAuthenticated && !!actor && !isActorFetching;
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -67,37 +66,19 @@ export function Dashboard() {
               />
             </Button>
 
-            {isAuthenticated ? (
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-1.5 font-semibold"
-                onClick={handleLogout}
-              >
-                <LogOut className="w-4 h-4" />
-                Logout
-              </Button>
-            ) : (
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-1.5 font-semibold"
-                onClick={login}
-                disabled={isLoggingIn}
-              >
-                <LogIn className="w-4 h-4" />
-                {isLoggingIn ? "Signing in…" : "Login"}
-              </Button>
-            )}
-
             {isAuthenticated && (
               <Button
                 size="sm"
                 className="gap-1.5 font-semibold"
                 onClick={() => setAddOpen(true)}
+                disabled={!isActorReady}
               >
-                <Plus className="w-4 h-4" />
-                Add Machine
+                {isActorFetching ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Plus className="w-4 h-4" />
+                )}
+                {isActorFetching ? "Connecting..." : "Add Machine"}
               </Button>
             )}
           </div>
@@ -188,9 +169,14 @@ export function Dashboard() {
             <Button
               className="gap-1.5 font-semibold mt-2"
               onClick={() => setAddOpen(true)}
+              disabled={!isActorReady}
             >
-              <Plus className="w-4 h-4" />
-              Add First Machine
+              {isActorFetching ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Plus className="w-4 h-4" />
+              )}
+              {isActorFetching ? "Connecting..." : "Add First Machine"}
             </Button>
           </div>
         )}

@@ -90,27 +90,35 @@ export function Dashboard() {
               </Button>
             )}
 
-            <Button
-              size="sm"
-              className="gap-1.5 font-semibold"
-              onClick={() => setAddOpen(true)}
-            >
-              <Plus className="w-4 h-4" />
-              Add Machine
-            </Button>
+            {isAuthenticated && (
+              <Button
+                size="sm"
+                className="gap-1.5 font-semibold"
+                onClick={() => setAddOpen(true)}
+              >
+                <Plus className="w-4 h-4" />
+                Add Machine
+              </Button>
+            )}
           </div>
         </div>
       </header>
 
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 py-6 space-y-5">
         {/* Due Today Alert Banner — shown above overdue banner */}
-        {!isLoading && <DueTodayAlertBanner machines={dueTodayMachines} />}
+        {isAuthenticated && !isLoading && (
+          <DueTodayAlertBanner machines={dueTodayMachines} />
+        )}
 
         {/* Overdue Alert Banner */}
-        {!isLoading && <OverdueAlertBanner machines={machines} />}
+        {isAuthenticated && !isLoading && (
+          <OverdueAlertBanner machines={machines} />
+        )}
 
         {/* Stats Bar */}
-        {!isLoading && machines.length > 0 && <StatsBar machines={machines} />}
+        {isAuthenticated && !isLoading && machines.length > 0 && (
+          <StatsBar machines={machines} />
+        )}
 
         {/* Loading State */}
         {isLoading && (
@@ -141,8 +149,31 @@ export function Dashboard() {
           </div>
         )}
 
+        {/* Not Logged In State */}
+        {!isAuthenticated && !isLoading && (
+          <div className="text-center py-16 space-y-3">
+            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto">
+              <LogIn className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <h2 className="font-condensed text-xl font-bold text-foreground">
+              Login to get started
+            </h2>
+            <p className="text-muted-foreground text-sm max-w-xs mx-auto">
+              Sign in to track machine cleaning schedules and due dates.
+            </p>
+            <Button
+              className="gap-1.5 font-semibold mt-2"
+              onClick={login}
+              disabled={isLoggingIn}
+            >
+              <LogIn className="w-4 h-4" />
+              {isLoggingIn ? "Signing in…" : "Login"}
+            </Button>
+          </div>
+        )}
+
         {/* Empty State */}
-        {!isLoading && !isError && machines.length === 0 && (
+        {isAuthenticated && !isLoading && !isError && machines.length === 0 && (
           <div className="text-center py-16 space-y-3">
             <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto">
               <Wrench className="w-8 h-8 text-muted-foreground" />
@@ -165,7 +196,7 @@ export function Dashboard() {
         )}
 
         {/* Machine Grid */}
-        {!isLoading && !isError && machines.length > 0 && (
+        {isAuthenticated && !isLoading && !isError && machines.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {machines.map((machine) => (
               <MachineCard key={machine.id} machine={machine} />

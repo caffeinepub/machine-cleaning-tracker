@@ -136,6 +136,12 @@
   .animate-flash-bg {
     animation: flash-bg 1.6s ease-in-out infinite;
   }
+
+  /* Flash animation for the due-today alert banner container */
+  .animate-flash-banner {
+    animation: flash-banner 1.6s ease-in-out infinite;
+    background-color: oklch(0.38 0.18 22);
+  }
 }
 
 @keyframes pulse-red {
@@ -177,5 +183,15 @@
   }
   50% {
     opacity: 0.75;
+  }
+}
+
+@keyframes flash-banner {
+  0%,
+  100% {
+    background-color: oklch(0.38 0.18 22);
+  }
+  50% {
+    background-color: oklch(0.28 0.18 22);
   }
 }

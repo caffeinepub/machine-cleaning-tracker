@@ -3,6 +3,7 @@ import type { LogEntry, Machine, UserProfile } from "../backend";
 import type { MachinePart } from "../backend";
 import { calculateNextDueFromToday, dateToTime } from "../utils/dateUtils";
 import { useActor } from "./useActor";
+import { useInternetIdentity } from "./useInternetIdentity";
 
 const MACHINES_KEY = ["machines"];
 const AUDIT_LOGS_KEY = ["auditLogs"];
@@ -11,14 +12,15 @@ const CONTACTS_KEY = ["contacts"];
 
 export function useGetAllMachines() {
   const { actor, isFetching } = useActor();
+  const { identity } = useInternetIdentity();
 
   return useQuery<Machine[]>({
     queryKey: MACHINES_KEY,
     queryFn: async () => {
-      if (!actor) return [];
+      if (!actor || !identity) return [];
       return actor.getAllMachines();
     },
-    enabled: !!actor && !isFetching,
+    enabled: !!actor && !!identity && !isFetching,
     refetchInterval: 30_000,
   });
 }
